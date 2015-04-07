@@ -39,6 +39,7 @@ public class OglofusProtection extends JavaPlugin
     protected static CommandsManager< CommandSender >            commandsManager = null;
     protected static ConfigurationDriver< OglofusConfiguration > configuration   = null;
     protected static ConfigurationDriver< OglofusLanguage >      language        = null;
+
     protected static OglofusProtection plugin;
 
     public OglofusProtection()

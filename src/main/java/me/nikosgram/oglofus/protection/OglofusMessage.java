@@ -29,8 +29,6 @@ public class OglofusMessage
 {
     public String message = "";
 
-    public OglofusMessage() {}
-
     public OglofusMessage( String message )
     {
         this.message = message;

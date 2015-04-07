@@ -22,10 +22,12 @@
 
     <groupId>me.nikosgram</groupId>
     <artifactId>oglofus-protection</artifactId>
-    <version>1.8.3-R1.0</version>
+    <version>1.8.3-R1.1-SNAPSHOT</version>
     <name>OglofusProtection</name>
     <packaging>jar</packaging>
-    <description>OglofusProtection allows a player to place a special block, and this protects their area from griefing!</description>
+    <description>OglofusProtection allows a player to place a special block, and this protects their area from
+        griefing!
+    </description>
 
     <developers>
         <developer>
