@@ -17,12 +17,13 @@
 package me.nikosgram.oglofus.protection;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.*;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -256,6 +257,40 @@ public class OglofusProtection extends JavaPlugin
                 ProtectionSystem.saveChanges();
             }
         }, getConfiguration().autoReloadDelay, getConfiguration().autoReloadDelay );
+    }
+
+    @Override
+    public boolean onCommand( CommandSender sender, Command cmd, String label, String[] args )
+    {
+        try
+        {
+            commandsManager.execute( cmd.getName(), args, sender, sender );
+        } catch ( CommandPermissionsException e )
+        {
+            sender.sendMessage( org.bukkit.ChatColor.RED + "You don't have permission." );
+        } catch ( MissingNestedCommandException e )
+        {
+            sender.sendMessage( org.bukkit.ChatColor.RED + e.getUsage() );
+        } catch ( CommandUsageException e )
+        {
+            sender.sendMessage( org.bukkit.ChatColor.RED + e.getMessage() );
+            sender.sendMessage( org.bukkit.ChatColor.RED + e.getUsage() );
+        } catch ( WrappedCommandException e )
+        {
+            if ( e.getCause() instanceof NumberFormatException )
+            {
+                sender.sendMessage( org.bukkit.ChatColor.RED + "Number expected, string received instead." );
+            } else
+            {
+                sender.sendMessage( org.bukkit.ChatColor.RED + "An error has occurred. See console." );
+                e.printStackTrace();
+            }
+        } catch ( CommandException e )
+        {
+            sender.sendMessage( org.bukkit.ChatColor.RED + e.getMessage() );
+        }
+
+        return true;
     }
 
     public enum ConfigurationAction
