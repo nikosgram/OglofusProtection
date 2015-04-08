@@ -80,44 +80,46 @@ public class OglofusCommands
         sender.sendMessage( ChatColor.GREEN + "Saving completed!" );
     }
 
-    @Command( aliases = { "debug" }, desc = "Debug the Oglofus-Protection", max = 0 )
-    @CommandPermissions( { "oglofus.protection.command.debug" } )
-    @Logging( Logging.LogMode.ALL )
-    @Console
-    public static void debug( CommandContext context, CommandSender sender ) throws org.bukkit.command.CommandException
-    {
-        for ( ProtectionArea area : ProtectionSystem.getProtectionAreas() )
-        {
-            sender.sendMessage( area.toString() );
-        }
-    }
-
-    @Command( aliases = { "give" }, desc = "Giving to you some protection blocks!", max = 0 )
+    @Command( aliases = { "give" }, usage = "<amount> [<player>]", desc = "Giving to you some protection blocks!", min = 0, max = 2 )
     @CommandPermissions( { "oglofus.protection.command.give" } )
     @Logging( Logging.LogMode.ALL )
     @Console
     public static void give( CommandContext context, CommandSender sender ) throws org.bukkit.command.CommandException
     {
-        if ( !( sender instanceof Player ) )
-        {
-            sender.sendMessage( ChatColor.RED + "Cannot execute that command, I don't know who you are!" );
-            return;
-        }
-        Material       material  = getConfiguration().getProtectionBlock();
-        Player         player    = ( Player ) sender;
-        ItemMeta       item      = Bukkit.getItemFactory().getItemMeta( material );
-        List< String > meta_data = new ArrayList< String >();
-        meta_data.add( 0, getConfiguration().protectionMetaData );
-        item.setLore( meta_data );
+        Material       material = getConfiguration().getProtectionBlock();
+        ItemMeta       itemMeta = Bukkit.getItemFactory().getItemMeta( material );
+        List< String > lore     = new ArrayList<>();
+
+        lore.add( 0, getConfiguration().protectionMetaData );
+
+        itemMeta.setLore( lore );
         ItemStack stack;
-        if ( context.argsLength() > 0 )
+        if ( context.argsLength() >= 1 )
         {
             stack = new ItemStack( material, context.getInteger( 0 ) );
         } else
         {
             stack = new ItemStack( material );
         }
-        stack.setItemMeta( item );
+        stack.setItemMeta( itemMeta );
+
+        Player player;
+        if ( context.argsLength() >= 2 )
+        {
+            if ( ( player = Bukkit.getPlayer( context.getString( 1 ) ) ) == null )
+            {
+                sender.sendMessage( getLanguage().playerOfflineException.getMessage( new String[]{ "player" }, new String[]{ context.getString( 1 ) } ) );
+                return;
+            }
+        } else
+        {
+            if ( !( sender instanceof Player ) )
+            {
+                sender.sendMessage( ChatColor.RED + "Cannot execute that command, I don't know who you are!" );
+                return;
+            }
+            player = ( Player ) sender;
+        }
         player.getInventory().addItem( stack );
     }
 
