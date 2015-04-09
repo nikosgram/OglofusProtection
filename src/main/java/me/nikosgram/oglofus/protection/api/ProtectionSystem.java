@@ -156,8 +156,33 @@ public final class ProtectionSystem
 
         int block_x = location.getBlockX(), block_y = location.getBlockY(), block_z = location.getBlockZ();
 
-        BlockVector vector_min = new BlockVector( block_x + radius, block_y + radius, block_z + radius );
-        BlockVector vector_max = new BlockVector( block_x - radius, block_y - radius, block_z - radius );
+        int max_y = getConfiguration().protectionVert ? location.getWorld().getMaxHeight() : block_y + radius;
+        int min_y = getConfiguration().protectionVert ? 0 : block_y - radius;
+
+        /**
+         * This is the minimum location and its height the {@link min_y}
+         *
+         *   0---------0
+         *   |         |
+         *   | Regions |
+         *   |         |
+         *  (0)--------0
+         *
+         *  But as 3D.
+         */
+        BlockVector vector_min = new BlockVector( block_x - radius, min_y, block_z - radius );
+        /**
+         * This is the maximum location and its height the {@link max_y}
+         *
+         *   0--------(0)
+         *   |         |
+         *   | Regions |
+         *   |         |
+         *   0---------0
+         *
+         *  But as 3D.
+         */
+        BlockVector vector_max = new BlockVector( block_x + radius, max_y, block_z + radius );
 
         UUID uuid = generateDatabaseUUID();
 
@@ -323,7 +348,7 @@ public final class ProtectionSystem
         Integer max_protections = null;
         for ( String key : getConfiguration().protectionLimits.other.keySet() )
         {
-            if ( target.hasPermission( "me.nikosgram.protection.limit." + key ) )
+            if ( target.hasPermission( "oglofus.protection.limit." + key ) )
             {
                 max_protections = getConfiguration().protectionLimits.other.get( key );
             }

@@ -34,6 +34,7 @@ public class OglofusConfiguration
     public Map< String, Object > protectionFlags    = new HashMap< String, Object >();
     public OglofusLimits         protectionLimits   = new OglofusLimits();
     public int                   protectionRadius   = 6;
+    public boolean               protectionVert     = false;
     public List< String >        protectionWorlds   = new ArrayList< String >();
     public String                protectionMetaData = "metadata";
     public long                  autoReloadDelay    = 300000;

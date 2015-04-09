@@ -33,6 +33,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
 
 public class OglofusProtection extends JavaPlugin
 {
@@ -128,6 +129,38 @@ public class OglofusProtection extends JavaPlugin
                 {
                     getConfiguration().protectionLimits.other.put( "vip", 5 );
                 }
+                for ( Permission permission : Bukkit.getPluginManager().getPermissions() )
+                {
+                    if ( permission.getName().startsWith( "oglofus.protection.limit." ) )
+                    {
+                        if ( getConfiguration().protectionLimits.other.keySet().contains( permission.getName().replaceFirst( "oglofus.protection.limit.", "" ) ) )
+                        {
+                            continue;
+                        }
+                        Bukkit.getPluginManager().removePermission( permission );
+                    }
+                }
+                for ( String limit : getConfiguration().protectionLimits.other.keySet() )
+                {
+                    boolean exists = false;
+                    for ( Permission permission : Bukkit.getPluginManager().getPermissions() )
+                    {
+                        if ( !permission.getName().startsWith( "oglofus.protection.limit." ) )
+                        {
+                            continue;
+                        }
+                        if ( permission.getName().equals( "oglofus.protection.limit." + limit ) )
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if ( exists )
+                    {
+                        continue;
+                    }
+                    Bukkit.getPluginManager().addPermission( new Permission( "oglofus.protection.limit." + limit, PermissionDefault.OP ) );
+                }
                 if ( getConfiguration().protectionWorlds.isEmpty() )
                 {
                     getConfiguration().protectionWorlds.add( "world" );
@@ -168,7 +201,6 @@ public class OglofusProtection extends JavaPlugin
     public void onLoad()
     {
         ProtectionSystem.invoke( plugin );
-        configurationAction( ConfigurationAction.RELOAD );
     }
 
     @Override
@@ -180,6 +212,8 @@ public class OglofusProtection extends JavaPlugin
     @Override
     public void onEnable()
     {
+        configurationAction( ConfigurationAction.RELOAD );
+
         PluginManager manager = getServer().getPluginManager();
 
         if ( manager.getPlugin( "WorldEdit" ) == null )

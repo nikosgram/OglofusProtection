@@ -278,9 +278,11 @@ public class OglofusProtectionArea implements ProtectionArea
         Collection< Entity > entities = new ArrayList< Entity >();
         for ( Location location : getBlocksLocations() )
         {
+            int blockLocation = location.getBlockX() + location.getBlockY() + location.getBlockZ();
             for ( Entity entity : location.getChunk().getEntities() )
             {
-                if ( entity.getLocation().lengthSquared() == location.lengthSquared() )
+                int entityLocation = entity.getLocation().getBlockX() + entity.getLocation().getBlockY() + entity.getLocation().getBlockZ();
+                if ( entityLocation == blockLocation )
                 {
                     entities.add( entity );
                 }
@@ -429,7 +431,6 @@ public class OglofusProtectionArea implements ProtectionArea
             if ( flag instanceof StateFlag )
             {
                 value = StateFlag.State.valueOf( getConfiguration().protectionFlags.get( key ).toString() );
-
             } else
                 if ( flag instanceof BooleanFlag )
                 {
