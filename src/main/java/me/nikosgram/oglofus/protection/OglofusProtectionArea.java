@@ -204,6 +204,24 @@ public class OglofusProtectionArea implements ProtectionArea
     }
 
     @Override
+    public Collection< Player > getOnlinePlayers( ProtectionRank rank )
+    {
+        Collection< Player > players = new ArrayList< Player >();
+        for ( UUID uuid : getPlayersUuid() )
+        {
+            Player player;
+            if ( ( player = Bukkit.getPlayer( uuid ) ) != null )
+            {
+                if ( getRank( player ).equals( rank ) )
+                {
+                    players.add( player );
+                }
+            }
+        }
+        return players;
+    }
+
+    @Override
     public Collection< UUID > getPlayersUuid()
     {
         Collection< UUID > returned = new ArrayList< UUID >( getOwnersUuid() );

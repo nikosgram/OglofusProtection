@@ -40,7 +40,17 @@ public class ConfigurationDriver< T >
         }
         this.configuration = configuration;
         this.workDirectory = workDirectory;
-        this.driver = new StorageDriver< T >( this );
+        switch ( configuration.getAnnotation( Configuration.class ).type() )
+        {
+            case Json:
+                driver = new JsonStorageDriver<>( this );
+                break;
+            case Yaml:
+                driver = new YamlStorageDriver<>( this );
+                break;
+            default:
+                driver = null;
+        }
     }
 
     public T getModel()

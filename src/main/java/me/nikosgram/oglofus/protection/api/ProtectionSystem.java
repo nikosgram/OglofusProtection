@@ -217,21 +217,13 @@ public final class ProtectionSystem
             e.printStackTrace();
         }
 
-        String message = getLanguage().protectionAreaCreated.getMessage( new String[]{ "id" }, new String[]{ uuid.toString() } );
-
-        ProtectionPlaceEvent protectionPlaceEvent = new ProtectionPlaceEvent( area, player, location, message );
-        Bukkit.getPluginManager().callEvent( protectionPlaceEvent );
-
-        if ( !protectionPlaceEvent.getMessage().equals( message ) )
-        {
-            message = protectionPlaceEvent.getMessage();
-        }
+        Bukkit.getPluginManager().callEvent( new ProtectionPlaceEvent( area, player, location ) );
 
         if ( player != null )
         {
-            player.sendRawMessage( message );
+            getLanguage().protectionAreaCreated.sendMessage( player, new String[]{ "id" }, new String[]{ uuid.toString() } );
         }
-        Bukkit.getConsoleSender().sendRawMessage( message );
+        getLanguage().protectionAreaCreated.sendMessage( Bukkit.getConsoleSender(), new String[]{ "id" }, new String[]{ uuid.toString() } );
     }
 
     public static void deleteProtectionRegion( ProtectionArea area, @Nullable Player player )
@@ -269,20 +261,12 @@ public final class ProtectionSystem
         }
         configurationSystem.getModel().map.remove( area.getUuid() );
 
-        String message = getLanguage().protectionAreaDeleted.getMessage( new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
-
-        ProtectionBreakEvent protectionBreakEvent = new ProtectionBreakEvent( area, player, message );
-        Bukkit.getPluginManager().callEvent( protectionBreakEvent );
-
-        if ( !protectionBreakEvent.getMessage().equals( message ) )
-        {
-            message = protectionBreakEvent.getMessage();
-        }
+        Bukkit.getPluginManager().callEvent( new ProtectionBreakEvent( area, player ) );
         if ( player != null )
         {
-            player.sendRawMessage( message );
+            getLanguage().protectionAreaDeleted.sendMessage( player, new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
         }
-        Bukkit.getConsoleSender().sendRawMessage( message );
+        getLanguage().protectionAreaDeleted.sendMessage(Bukkit.getConsoleSender(),  new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
     }
 
     public static void deleteProtectionRegion( Location location, @Nullable Player player )

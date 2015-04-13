@@ -57,6 +57,8 @@ public interface ProtectionArea
 
     Collection< Player > getOnlinePlayers();
 
+    Collection< Player > getOnlinePlayers( ProtectionRank rank );
+
     Collection< UUID > getPlayersUuid();
 
     @Deprecated

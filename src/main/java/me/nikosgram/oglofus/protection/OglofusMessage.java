@@ -17,86 +17,155 @@
 package me.nikosgram.oglofus.protection;
 
 import com.sk89q.worldguard.LocalPlayer;
+import me.nikosgram.oglofus.protection.api.MessageLang;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-import static me.nikosgram.oglofus.protection.OglofusProtection.notNull;
-import static me.nikosgram.oglofus.protection.OglofusProtection.reformMessage;
+import static me.nikosgram.oglofus.protection.OglofusProtection.*;
 
 public class OglofusMessage
 {
-    public String message = "";
+    public String english = "";
+    public String greek   = null;
 
     public OglofusMessage( String message )
     {
-        this.message = message;
+        this.english = message;
+    }
+
+    public OglofusMessage( String english, String greek )
+    {
+        this.english = english;
+        this.greek = greek;
+    }
+
+    public String getEnglish()
+    {
+        return english;
+    }
+
+    public void setEnglish( String english )
+    {
+        this.english = english;
+    }
+
+    public String getGreek()
+    {
+        return greek;
+    }
+
+    public void setGreek( String greek )
+    {
+        this.greek = greek;
     }
 
     public String getMessage()
     {
-        return reformMessage( message );
+        return getMessage( MessageLang.English );
+    }
+
+    public String getMessage( MessageLang lang )
+    {
+        switch ( lang )
+        {
+            case English:
+                return reformMessage( english );
+            case Greek:
+                if ( greek != null )
+                {
+                    return reformMessage( greek );
+                }
+            default:
+                return getMessage();
+        }
     }
 
     public String getMessage( Map< String, String > values )
     {
-        return reformMessage( message, values );
+        return reformMessage( getMessage(), values );
+    }
+
+    public String getMessage( Map< String, String > values, MessageLang lang )
+    {
+        return reformMessage( getMessage( lang ), values );
     }
 
     public String getMessage( String[] keys, String[] values )
     {
-        return reformMessage( message, keys, values );
+        return reformMessage( getMessage(), keys, values );
     }
 
-    public void sendMessage( Player sender )
+    public String getMessage( String[] keys, String[] values, MessageLang lang )
     {
-        notNull( sender ).sendRawMessage( getMessage() );
+        return reformMessage( getMessage( lang ), keys, values );
     }
 
-    public void sendMessage( Player sender, Map< String, String > values )
+    public void sendMessage( Player target )
     {
-        notNull( sender ).sendRawMessage( getMessage( values ) );
+        notNull( target ).sendRawMessage( getMessage( getLanguage( target ) ) );
     }
 
-    public void sendMessage( Player sender, String[] keys, String[] values )
+    public void sendMessage( Player target, Map< String, String > values )
     {
-        notNull( sender ).sendRawMessage( getMessage( keys, values ) );
+        notNull( target ).sendRawMessage( getMessage( values, getLanguage( target ) ) );
     }
 
-    public void sendMessage( LocalPlayer sender )
+    public void sendMessage( Player target, String[] keys, String[] values )
     {
-        notNull( sender ).printRaw( getMessage() );
+        notNull( target ).sendRawMessage( getMessage( keys, values, getLanguage( target ) ) );
     }
 
-    public void sendMessage( LocalPlayer sender, Map< String, String > values )
+    public void sendMessage( LocalPlayer target )
     {
-        notNull( sender ).printRaw( getMessage( values ) );
+        sendMessage( Bukkit.getPlayer( target.getUniqueId() ) );
     }
 
-    public void sendMessage( LocalPlayer sender, String[] keys, String[] values )
+    public void sendMessage( LocalPlayer target, Map< String, String > values )
     {
-        notNull( sender ).printRaw( getMessage( keys, values ) );
+        sendMessage( Bukkit.getPlayer( target.getUniqueId() ), values );
     }
 
-    public void sendMessage( CommandSender sender )
+    public void sendMessage( LocalPlayer target, String[] keys, String[] values )
     {
-        notNull( sender ).sendMessage( getMessage() );
+        sendMessage( Bukkit.getPlayer( target.getUniqueId() ), keys, values );
     }
 
-    public void sendMessage( CommandSender sender, Map< String, String > values )
+    public void sendMessage( CommandSender target )
     {
-        notNull( sender ).sendMessage( getMessage( values ) );
+        if ( target instanceof Player )
+        {
+            sendMessage( ( Player ) target );
+            return;
+        }
+        notNull( target ).sendMessage( getMessage() );
     }
 
-    public void sendMessage( CommandSender sender, String[] keys, String[] values )
+    public void sendMessage( CommandSender target, Map< String, String > values )
     {
-        notNull( sender ).sendMessage( getMessage( keys, values ) );
+        if ( target instanceof Player )
+        {
+            sendMessage( ( Player ) target, values );
+            return;
+        }
+        notNull( target ).sendMessage( getMessage( values ) );
+    }
+
+    public void sendMessage( CommandSender target, String[] keys, String[] values )
+    {
+        if ( target instanceof Player )
+        {
+            sendMessage( ( Player ) target, keys, values );
+            return;
+        }
+        notNull( target ).sendMessage( getMessage( keys, values ) );
     }
 
     @Override
     public String toString()
     {
-        return message;
+        return getMessage();
     }
 }

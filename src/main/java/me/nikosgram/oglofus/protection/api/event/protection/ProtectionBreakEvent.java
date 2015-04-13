@@ -26,13 +26,11 @@ public class ProtectionBreakEvent extends ProtectionEvent
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
-    private       String message;
 
-    public ProtectionBreakEvent( ProtectionArea protectionArea, Player player, String message )
+    public ProtectionBreakEvent( ProtectionArea protectionArea, Player player )
     {
         super( protectionArea );
         this.player = player;
-        this.message = message;
     }
 
     public static HandlerList getHandlerList()
@@ -49,15 +47,5 @@ public class ProtectionBreakEvent extends ProtectionEvent
     public Player getPlayer()
     {
         return player;
-    }
-
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 }

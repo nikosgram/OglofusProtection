@@ -6,7 +6,7 @@
 
     <groupId>me.nikosgram</groupId>
     <artifactId>oglofus-protection</artifactId>
-    <version>1.8.3-R1.3-SNAPSHOT</version>
+    <version>1.8.3-R1.4-SNAPSHOT</version>
     <name>OglofusProtection</name>
     <packaging>jar</packaging>
     <description>OglofusProtection allows a player to place a special block, and this protects their area from
@@ -73,6 +73,12 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware.yamlbeans</groupId>
+            <artifactId>yamlbeans</artifactId>
+            <version>1.09</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

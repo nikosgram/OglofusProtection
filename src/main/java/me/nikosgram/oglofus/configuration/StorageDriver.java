@@ -16,112 +16,23 @@
 
 package me.nikosgram.oglofus.configuration;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public class StorageDriver< T >
+public interface StorageDriver< T >
 {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    /**
+     * Create the configuration file and the parent directories.
+     *
+     * @return true if the configuration file exists!
+     */
+    boolean create();
 
-    protected final ConfigurationDriver< T > driver;
-    protected final Configuration            configuration;
-    private final   Path                     path;
+    /**
+     * Write the object to the file.
+     */
+    void save();
 
-    private long modified = 0L;
-
-    protected StorageDriver( ConfigurationDriver< T > driver )
-    {
-        this.driver = driver;
-        configuration = driver.configuration.getAnnotation( Configuration.class );
-        path = Paths.get( driver.workDirectory.toString() + "/" + configuration.value() + ".json" );
-    }
-
-    public boolean create()
-    {
-        Path parent = path.getParent();
-        if ( !Files.exists( parent ) )
-        {
-            try
-            {
-                Files.createDirectories( parent );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-        }
-        if ( !Files.exists( path ) )
-        {
-            try
-            {
-                Files.createFile( path );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-        }
-        return Files.exists( path );
-    }
-
-    public void save()
-    {
-        if ( create() )
-        {
-            try ( FileWriter writer = new FileWriter( path.toFile() ) )
-            {
-                GSON.toJson( GSON.toJsonTree( driver.model ), writer );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            try
-            {
-                modified = Files.getLastModifiedTime( path ).toMillis();
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void load()
-    {
-        if ( create() )
-        {
-            try
-            {
-                if ( Files.getLastModifiedTime( path ).toMillis() == modified )
-                {
-                    return;
-                }
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            try ( FileReader reader = new FileReader( path.toFile() ) )
-            {
-                driver.model = GSON.fromJson( reader, driver.configuration );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            if ( driver.model == null )
-            {
-                try
-                {
-                    driver.model = driver.configuration.newInstance();
-                    save();
-                } catch ( InstantiationException | IllegalAccessException e )
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    /**
+     * Reading and parse the configuration file in a stream and
+     * produce the corresponding Java object.
+     */
+    void load();
 }

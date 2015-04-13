@@ -28,14 +28,12 @@ public class ProtectionPlaceEvent extends ProtectionEvent
 
     private final Player   placer;
     private final Location blockLocation;
-    private       String   message;
 
-    public ProtectionPlaceEvent( ProtectionArea protectionArea, Player placer, Location blockLocation, String message )
+    public ProtectionPlaceEvent( ProtectionArea protectionArea, Player placer, Location blockLocation )
     {
         super( protectionArea );
         this.placer = placer;
         this.blockLocation = blockLocation;
-        this.message = message;
     }
 
     public static HandlerList getHandlerList()
@@ -57,15 +55,5 @@ public class ProtectionPlaceEvent extends ProtectionEvent
     public Location getBlockLocation()
     {
         return blockLocation;
-    }
-
-    public String getMessage()
-    {
-        return message;
-    }
-
-    public void setMessage( String message )
-    {
-        this.message = message;
     }
 }

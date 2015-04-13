@@ -17,7 +17,6 @@
 package me.nikosgram.oglofus.protection;
 
 import com.sk89q.minecraft.util.commands.*;
-import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.nikosgram.oglofus.protection.api.InviteSystem;
@@ -55,7 +54,7 @@ public class OglofusCommands
     public static void version( CommandContext context, CommandSender sender ) throws org.bukkit.command.CommandException
     {
         sender.sendMessage( ChatColor.YELLOW + getPlugin().getDescription().getName() + " " + getPlugin().getDescription().getVersion() );
-        sender.sendMessage( ChatColor.YELLOW + "by nikosgram13" );
+        new OglofusMessage( "&eAuthor: niksogram13", "&eΔημιουργός: nikosgram13" ).sendMessage( sender );
     }
 
     @Command( aliases = { "reload" }, desc = "Reload the Oglofus-Protection", max = 0 )
@@ -64,9 +63,9 @@ public class OglofusCommands
     @Console
     public static void reload( CommandContext context, CommandSender sender ) throws org.bukkit.command.CommandException
     {
-        sender.sendMessage( ChatColor.YELLOW + "The system reloading..." );
+        new OglofusMessage( "&eThe system reloading...", "&eΤο σύστημα διαβάζει ξανά τα αρχεία διαμόρφωσης..." ).sendMessage( sender );
         configurationAction( OglofusProtection.ConfigurationAction.RELOAD );
-        sender.sendMessage( ChatColor.GREEN + "Reloading completed!" );
+        new OglofusMessage( "&aReloading completed!", "&aΗ διαδικασία ολοκληρώθηκε!" ).sendMessage( sender );
     }
 
     @Command( aliases = { "save" }, desc = "Force save the protection regions", max = 0 )
@@ -75,9 +74,9 @@ public class OglofusCommands
     @Console
     public static void save( CommandContext context, CommandSender sender ) throws org.bukkit.command.CommandException
     {
-        sender.sendMessage( ChatColor.YELLOW + "The system saving the regions..." );
+        new OglofusMessage( "&eThe system saving the regions...", "&eΤο σύστημα αποθηκεύει όλες τις προστατευόμενες περιοχές..." ).sendMessage( sender );
         ProtectionSystem.saveChanges();
-        sender.sendMessage( ChatColor.GREEN + "Saving completed!" );
+        new OglofusMessage( "&aSaving completed!", "&aΗ διαδικασία ολοκληρώθηκε!" ).sendMessage( sender );
     }
 
     @Command( aliases = { "give" }, usage = "<amount> [<player>]", desc = "Giving to you some protection blocks!", min = 0, max = 2 )
@@ -108,7 +107,7 @@ public class OglofusCommands
         {
             if ( ( player = Bukkit.getPlayer( context.getString( 1 ) ) ) == null )
             {
-                sender.sendMessage( getLanguage().playerOfflineException.getMessage( new String[]{ "player" }, new String[]{ context.getString( 1 ) } ) );
+                getLanguage().playerOfflineException.sendMessage( sender, new String[]{ "player" }, new String[]{ context.getString( 1 ) } );
                 return;
             }
         } else
@@ -137,30 +136,56 @@ public class OglofusCommands
                 sender.sendMessage( ChatColor.AQUA + "You can use /protection invite <username> <id>" );
                 return;
             }
-            if ( !getConfiguration().allowWorld( ( ( Player ) sender ).getWorld() ) )
+            Player player = ( Player ) sender;
+            if ( !getConfiguration().allowWorld( player.getWorld() ) )
             {
-                getLanguage().noProtectionArea.sendMessage( sender );
+                getLanguage().noProtectionArea.sendMessage( player );
                 return;
             }
             List< String > local_regions;
-            if ( ( local_regions = getRegionManager( ( ( Player ) sender ).getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( ( Player ) sender ).getPosition() ) ).size() < 1 )
+            if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
             {
-                getLanguage().noAreas.sendMessage( sender );
+                getLanguage().noAreas.sendMessage( player );
                 return;
             }
-            ProtectionArea area;
-            if ( ( area = ProtectionSystem.getProtectionArea( UUID.fromString( local_regions.get( 0 ) ) ) ) != null )
+            UUID uuid = null;
+            for ( String regions : local_regions )
             {
                 try
                 {
-                    area.invite( sender, context.getString( 0 ) );
-                } catch ( AlreadyMemberException | PlayerOfflineException | AccessException | InviteYourSelfException e )
+                    uuid = UUID.fromString( regions );
+                    break;
+                } catch ( IllegalArgumentException ignored ) {}
+            }
+            if ( uuid == null )
+            {
+                getLanguage().noProtectionArea.sendMessage( player );
+                return;
+            }
+            ProtectionArea area;
+            if ( ( area = ProtectionSystem.getProtectionArea( uuid ) ) != null )
+            {
+                Map< String, String > values = new HashMap<>();
+                values.put( "player", context.getString( 0 ) );
+                try
                 {
-                    sender.sendMessage( e.getMessage() );
+                    area.invite( sender, context.getString( 0 ) );
+                } catch ( AlreadyMemberException e )
+                {
+                    getLanguage().alreadyMemberException.sendMessage( player, values );
+                } catch ( PlayerOfflineException e )
+                {
+                    getLanguage().playerOfflineException.sendMessage( player, values );
+                } catch ( AccessException e )
+                {
+                    getLanguage().accessException.sendMessage( player );
+                } catch ( InviteYourSelfException e )
+                {
+                    getLanguage().inviteYourSelfException.sendMessage( player );
                 }
                 return;
             }
-            getLanguage().noProtectionArea.sendMessage( sender );
+            getLanguage().noProtectionArea.sendMessage( ( ( Player ) sender ) );
             return;
         }
         if ( sender instanceof Player )
@@ -197,73 +222,72 @@ public class OglofusCommands
                 sender.sendMessage( ChatColor.AQUA + "You can use /protection info <id>" );
                 return;
             }
-            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer( ( Player ) sender );
-            if ( !getConfiguration().allowWorld( ( ( Player ) sender ).getWorld() ) )
+            Player player = ( Player ) sender;
+            if ( !getConfiguration().allowWorld( player.getWorld() ) )
             {
-                getLanguage().noProtectionArea.sendMessage( sender );
+                getLanguage().noProtectionArea.sendMessage( player );
                 return;
             }
             List< String > local_regions;
-            if ( ( local_regions = getRegionManager( ( ( Player ) sender ).getWorld() ).getApplicableRegionsIDs( localPlayer.getPosition() ) ).size() < 1 )
+            if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
             {
-                getLanguage().noAreas.sendMessage( sender );
+                getLanguage().noAreas.sendMessage( player );
+                return;
+            }
+            UUID uuid = null;
+            for ( String regions : local_regions )
+            {
+                try
+                {
+                    uuid = UUID.fromString( regions );
+                    break;
+                } catch ( IllegalArgumentException ignored ) {}
+            }
+            if ( uuid == null )
+            {
+                getLanguage().noProtectionArea.sendMessage( player );
                 return;
             }
             ProtectionArea area;
-            if ( ( area = ProtectionSystem.getProtectionArea( UUID.fromString( local_regions.get( 0 ) ) ) ) != null )
+            if ( ( area = ProtectionSystem.getProtectionArea( uuid ) ) != null )
             {
                 ProtectedRegion region = area.getRegion();
 
-                if ( area.hasOwnerAccess( ( ( Player ) sender ) ) )
+                Map< String, String > values = new HashMap< String, String >();
+
+                values.put( "n", "\n" );
+                values.put( "id", area.getUuid().toString() );
+                List< String > members = new ArrayList< String >();
+                for ( OfflinePlayer member : area.getMembers() )
                 {
-                    Map< String, String > values = new HashMap< String, String >();
+                    members.add( member.getName() );
+                }
+                List< String > owners = new ArrayList< String >();
+                for ( OfflinePlayer owner : area.getOwners() )
+                {
+                    members.add( owner.getName() );
+                }
+                values.put( "owners", StringUtils.join( owners, ", " ) );
+                values.put( "members", StringUtils.join( members, ", " ) );
+                values.put( "location", area.getLocation().getX() + "," + area.getLocation().getBlockY() + "," + area.getLocation().getBlockZ() );
+                values.put( "vector", region.getMinimumPoint().toString() + ' ' + region.getMaximumPoint().toString() );
 
-                    values.put( "n", "\n" );
-                    values.put( "id", area.getUuid().toString() );
-                    List< String > members = new ArrayList< String >();
-                    for ( OfflinePlayer member : area.getMembers() )
-                    {
-                        members.add( member.getName() );
-                    }
-                    List< String > owners = new ArrayList< String >();
-                    for ( OfflinePlayer owner : area.getOwners() )
-                    {
-                        members.add( owner.getName() );
-                    }
-                    values.put( "owners", StringUtils.join( owners, ", " ) );
-                    values.put( "members", StringUtils.join( members, ", " ) );
-                    values.put( "location", area.getLocation().getX() + "," + area.getLocation().getBlockY() + "," + area.getLocation().getBlockZ() );
-                    values.put( "vector", region.getMinimumPoint().toString() + ' ' + region.getMaximumPoint().toString() );
-
-                    getLanguage().ownerInfo.sendMessage( sender, values );
-                } else
-                    if ( region.isMember( localPlayer ) )
-                    {
-                        Map< String, String > values = new HashMap< String, String >();
-
-                        values.put( "n", "\n" );
-                        values.put( "id", region.getId() );
-                        List< String > members = new ArrayList< String >();
-                        for ( OfflinePlayer member : area.getMembers() )
-                        {
-                            members.add( member.getName() );
-                        }
-                        List< String > owners = new ArrayList< String >();
-                        for ( OfflinePlayer owner : area.getOwners() )
-                        {
-                            members.add( owner.getName() );
-                        }
-                        values.put( "owners", StringUtils.join( owners, ", " ) );
-                        values.put( "members", StringUtils.join( members, ", " ) );
-
-                        getLanguage().memberInfo.sendMessage( sender, values );
-                    } else
-                    {
-                        getLanguage().protectionAreaNotAccess.sendMessage( sender );
-                    }
+                switch ( area.getRank( ( ( Player ) sender ) ) )
+                {
+                    case Owner:
+                        getLanguage().ownerInfo.sendMessage( player, values );
+                        break;
+                    case Member:
+                        getLanguage().memberInfo.sendMessage( player, values );
+                        break;
+                    case None:
+                    default:
+                        getLanguage().protectionAreaNotAccess.sendMessage( player );
+                        break;
+                }
                 return;
             }
-            getLanguage().noProtectionArea.sendMessage( sender );
+            getLanguage().noProtectionArea.sendMessage( player );
             return;
         }
         if ( sender instanceof Player )
@@ -314,31 +338,56 @@ public class OglofusCommands
                 sender.sendMessage( ChatColor.AQUA + "You can use /protection invite <username> <id>" );
                 return;
             }
-            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer( ( Player ) sender );
-            if ( !getConfiguration().allowWorld( ( ( Player ) sender ).getWorld() ) )
+            Player player = ( Player ) sender;
+            if ( !getConfiguration().allowWorld( player.getWorld() ) )
             {
-                getLanguage().noProtectionArea.sendMessage( sender );
+                getLanguage().noProtectionArea.sendMessage( player );
                 return;
             }
             List< String > local_regions;
-            if ( ( local_regions = getRegionManager( ( ( Player ) sender ).getWorld() ).getApplicableRegionsIDs( localPlayer.getPosition() ) ).size() < 1 )
+            if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
             {
-                getLanguage().noAreas.sendMessage( sender );
+                getLanguage().noAreas.sendMessage( player );
                 return;
             }
-            ProtectionArea area;
-            if ( ( area = ProtectionSystem.getProtectionArea( UUID.fromString( local_regions.get( 0 ) ) ) ) != null )
+            UUID uuid = null;
+            for ( String regions : local_regions )
             {
                 try
                 {
-                    area.kick( sender, context.getString( 0 ) );
-                } catch ( PlayerNotExistsException | MemberNotExistsException | KickYourSelfException | AccessException e )
+                    uuid = UUID.fromString( regions );
+                    break;
+                } catch ( IllegalArgumentException ignored ) {}
+            }
+            if ( uuid == null )
+            {
+                getLanguage().noProtectionArea.sendMessage( player );
+                return;
+            }
+            ProtectionArea area;
+            if ( ( area = ProtectionSystem.getProtectionArea( uuid ) ) != null )
+            {
+                Map< String, String > values = new HashMap<>();
+                values.put( "player", context.getString( 0 ) );
+                try
                 {
-                    sender.sendMessage( e.getMessage() );
+                    area.kick( player, context.getString( 0 ) );
+                } catch ( AccessException e )
+                {
+                    getLanguage().accessException.sendMessage( player );
+                } catch ( PlayerNotExistsException e )
+                {
+                    getLanguage().playerNotExistsException.sendMessage( player, values );
+                } catch ( MemberNotExistsException e )
+                {
+                    getLanguage().memberNotExistsException.sendMessage( player, values );
+                } catch ( KickYourSelfException e )
+                {
+                    getLanguage().kickYourSelfException.sendMessage( player );
                 }
                 return;
             }
-            getLanguage().noProtectionArea.sendMessage( sender );
+            getLanguage().noProtectionArea.sendMessage( player );
             return;
         }
         if ( sender instanceof Player )
@@ -351,9 +400,18 @@ public class OglofusCommands
             try
             {
                 area.kick( sender, context.getString( 0 ) );
-            } catch ( AccessException | PlayerNotExistsException | MemberNotExistsException | KickYourSelfException e )
+            } catch ( AccessException e )
             {
-                sender.sendMessage( e.getMessage() );
+                getLanguage().accessException.sendMessage( sender );
+            } catch ( PlayerNotExistsException e )
+            {
+                getLanguage().playerNotExistsException.sendMessage( sender );
+            } catch ( MemberNotExistsException e )
+            {
+                getLanguage().memberNotExistsException.sendMessage( sender );
+            } catch ( KickYourSelfException e )
+            {
+                getLanguage().kickYourSelfException.sendMessage( sender );
             }
             return;
         }
@@ -376,7 +434,7 @@ public class OglofusCommands
             InviteSystem.accept( ( Player ) sender );
         } catch ( NoInvitesException e )
         {
-            sender.sendMessage( reformMessage( e.getMessage() ) );
+            getLanguage().noInvitesException.sendMessage( ( Player ) sender );
         }
     }
 }

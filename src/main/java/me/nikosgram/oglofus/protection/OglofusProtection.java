@@ -19,21 +19,23 @@ package me.nikosgram.oglofus.protection;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
+import me.nikosgram.oglofus.protection.api.MessageLang;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 
 public class OglofusProtection extends JavaPlugin
 {
@@ -96,6 +98,24 @@ public class OglofusProtection extends JavaPlugin
         return ChatColor.translateAlternateColorCodes( '&', StrSubstitutor.replace( notEmpty( notNull( message ) ), ( values == null ? new HashMap< String, String >() : values ), "{", "}" ) );
     }
 
+    public static MessageLang getLanguage( Player p )
+    {
+        String locale = p.spigot().getLocale();
+        switch ( locale.substring( 0, 2 ).toLowerCase() )
+        {
+            case "el":
+                return MessageLang.Greek;
+            default:
+                return MessageLang.English;
+        }
+    }
+
+    private static Method getMethod( String name, Class< ? > clazz )
+    {
+        for ( Method m : clazz.getDeclaredMethods() )
+            if ( m.getName().equals( name ) ) return m;
+        return null;
+    }
 
     public static OglofusConfiguration getConfiguration()
     {
