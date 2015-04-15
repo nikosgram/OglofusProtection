@@ -3,4 +3,11 @@ version: ${project.version}
 main: me.nikosgram.oglofus.protection.OglofusProtection
 softdepend: [WorldEdit, WorldGuard]
 description: ${project.description}
-author: nikosgram
+author: nikosgram13
+
+commands:
+    protection:
+        description: Access to Oglofus-Protection commands
+        aliases: [protect, protector, p]
+        permission: oglofus.protection.command
+        usage: /<command>

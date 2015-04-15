@@ -430,9 +430,9 @@ public class OglofusProtectionArea implements ProtectionArea
         ProtectedRegion region = getRegion();
         if ( region == null )
         {
-            getPlugin().getLogger().warning( ChatColor.RED + "The ProtectedRegion not exists. '" + regionUID + "'." );
+            log( ChatColor.RED + "The ProtectedRegion not exists. '" + regionUID + "'." );
             ProtectionSystem.removeProtectionArena( this );
-            getPlugin().getLogger().warning( ChatColor.RED + "The ProtectionArea '" + regionUID + "' deleted." );
+            log( ChatColor.RED + "The ProtectionArea '" + regionUID + "' deleted." );
             throw new ProtectionRegionNullableException();
         }
 

@@ -39,6 +39,9 @@ public class OglofusEffect
 
     public void playEffect( Location location, int var )
     {
-        notNull( location ).getWorld().playEffect( location, getEffect(), var );
+        if ( enabled )
+        {
+            notNull( location ).getWorld().playEffect( location, getEffect(), var );
+        }
     }
 }

@@ -16,16 +16,13 @@
 
 package me.nikosgram.oglofus.protection;
 
-import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.*;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
 import me.nikosgram.oglofus.protection.api.MessageLang;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
@@ -33,15 +30,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 public class OglofusProtection extends JavaPlugin
 {
-    protected static CommandsManager< CommandSender >            commandsManager = null;
-    protected static ConfigurationDriver< OglofusConfiguration > configuration   = null;
-    protected static ConfigurationDriver< OglofusLanguage >      language        = null;
+    protected static ConfigurationDriver< OglofusConfiguration > configuration = null;
+    protected static ConfigurationDriver< OglofusLanguage >      language      = null;
 
     protected static OglofusProtection plugin;
 
@@ -110,13 +105,6 @@ public class OglofusProtection extends JavaPlugin
         }
     }
 
-    private static Method getMethod( String name, Class< ? > clazz )
-    {
-        for ( Method m : clazz.getDeclaredMethods() )
-            if ( m.getName().equals( name ) ) return m;
-        return null;
-    }
-
     public static OglofusConfiguration getConfiguration()
     {
         return configuration.getModel();
@@ -133,7 +121,7 @@ public class OglofusProtection extends JavaPlugin
         {
             case LOAD:
             {
-                plugin.getLogger().info( org.bukkit.ChatColor.YELLOW + "Configuration loading..." );
+                log( ChatColor.YELLOW + "Configuration loading..." );
                 if ( configuration == null )
                 {
                     configuration = new ConfigurationDriver< OglofusConfiguration >( OglofusConfiguration.class, plugin.getDataFolder().toPath() ).load();
@@ -192,15 +180,15 @@ public class OglofusProtection extends JavaPlugin
                 {
                     language.load();
                 }
-                plugin.getLogger().info( org.bukkit.ChatColor.GREEN + "Loading completed!" );
+                log( ChatColor.GREEN + "Loading completed!" );
                 break;
             }
             case SAVE:
             {
-                plugin.getLogger().info( org.bukkit.ChatColor.YELLOW + "Configuration saving..." );
+                log( ChatColor.YELLOW + "Configuration saving..." );
                 notNull( configuration, "The configurations must not be null. Load the Configuration first!" ).save();
                 notNull( language, "The language must not be null. Load the Configuration first!" ).save();
-                plugin.getLogger().info( org.bukkit.ChatColor.GREEN + "Saving completed!" );
+                log( ChatColor.GREEN + "Saving completed!" );
                 break;
             }
             case RELOAD:
@@ -215,6 +203,14 @@ public class OglofusProtection extends JavaPlugin
     public static OglofusProtection getPlugin()
     {
         return plugin;
+    }
+
+    public static void log( String... messages )
+    {
+        for ( String message : messages )
+        {
+            Bukkit.getConsoleSender().sendMessage( ChatColor.RESET + "[" + ChatColor.AQUA + plugin.getDescription().getName() + ChatColor.RESET + "] " + message );
+        }
     }
 
     @Override
@@ -265,6 +261,7 @@ public class OglofusProtection extends JavaPlugin
          * Default Permissions:
          */
         manager.addPermission( new Permission( "oglofus.protection.command", PermissionDefault.TRUE ) );
+        manager.addPermission( new Permission( "oglofus.protection.command.help", PermissionDefault.TRUE ) );
         manager.addPermission( new Permission( "oglofus.protection.command.accept", PermissionDefault.TRUE ) );
         manager.addPermission( new Permission( "oglofus.protection.command.info", PermissionDefault.TRUE ) );
         manager.addPermission( new Permission( "oglofus.protection.command.invite", PermissionDefault.TRUE ) );
@@ -280,20 +277,14 @@ public class OglofusProtection extends JavaPlugin
         manager.addPermission( new Permission( "oglofus.protection.command.reload", PermissionDefault.OP ) );
         manager.addPermission( new Permission( "oglofus.protection.bypass", PermissionDefault.OP ) );
 
-        commandsManager = new CommandsManager< CommandSender >()
-        {
-            @Override
-            public boolean hasPermission( CommandSender sender, String s )
-            {
-                return sender.hasPermission( s );
-            }
-        };
-
         /**
          * Registering commands...
          */
-        CommandsManagerRegistration registration = new CommandsManagerRegistration( this, commandsManager );
-        registration.register( OglofusCommand.class );
+        OglofusCommandExecute oglofusCommandExecute = new OglofusCommandExecute();
+
+        PluginCommand command = Bukkit.getPluginCommand( "protection" );
+        command.setExecutor( oglofusCommandExecute );
+        command.setTabCompleter( oglofusCommandExecute );
 
         /**
          * Registering listeners...
@@ -312,40 +303,6 @@ public class OglofusProtection extends JavaPlugin
                 ProtectionSystem.saveChanges();
             }
         }, getConfiguration().autoReloadDelay, getConfiguration().autoReloadDelay );
-    }
-
-    @Override
-    public boolean onCommand( CommandSender sender, Command cmd, String label, String[] args )
-    {
-        try
-        {
-            commandsManager.execute( cmd.getName(), args, sender, sender );
-        } catch ( CommandPermissionsException e )
-        {
-            sender.sendMessage( org.bukkit.ChatColor.RED + "You don't have permission." );
-        } catch ( MissingNestedCommandException e )
-        {
-            sender.sendMessage( org.bukkit.ChatColor.RED + e.getUsage() );
-        } catch ( CommandUsageException e )
-        {
-            sender.sendMessage( org.bukkit.ChatColor.RED + e.getMessage() );
-            sender.sendMessage( org.bukkit.ChatColor.RED + e.getUsage() );
-        } catch ( WrappedCommandException e )
-        {
-            if ( e.getCause() instanceof NumberFormatException )
-            {
-                sender.sendMessage( org.bukkit.ChatColor.RED + "Number expected, string received instead." );
-            } else
-            {
-                sender.sendMessage( org.bukkit.ChatColor.RED + "An error has occurred. See console." );
-                e.printStackTrace();
-            }
-        } catch ( CommandException e )
-        {
-            sender.sendMessage( org.bukkit.ChatColor.RED + e.getMessage() );
-        }
-
-        return true;
     }
 
     public enum ConfigurationAction

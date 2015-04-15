@@ -28,7 +28,10 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -61,7 +64,7 @@ public class OglofusListener implements Listener
         }
         try
         {
-            ProtectionSystem.createProtectionArea( event.getBlock().getLocation(), event.getPlayer() );
+            ProtectionSystem.createProtectionArea( event );
         } catch ( ProtectionWorldException | ProtectionLoreException | ProtectionBlockNullableException | ProtectionBlockNotEqualWithPlacedException ignored )
         {
         } catch ( MaxProtectionAreasException e )
@@ -87,7 +90,7 @@ public class OglofusListener implements Listener
         }
         try
         {
-            ProtectionSystem.deleteProtectionRegion( event.getBlock().getLocation(), event.getPlayer() );
+            ProtectionSystem.deleteProtectionArea( event );
 
             event.getBlock().setType( Material.AIR );
             if ( !event.getPlayer().getGameMode().equals( GameMode.CREATIVE ) )
@@ -98,7 +101,7 @@ public class OglofusListener implements Listener
                 meta_data.add( 0, getConfiguration().protectionMetaData );
                 item.setLore( meta_data );
                 stack.setItemMeta( item );
-                event.getPlayer().getWorld().dropItemNaturally( event.getPlayer().getLocation(), stack );
+                event.getPlayer().getWorld().dropItemNaturally( event.getBlock().getLocation(), stack );
             }
             event.setCancelled( true );
         } catch ( ProtectionBlockNotEqualWithPlacedException | ProtectionRegionNullableException | ProtectionAreaNotExistsException | ProtectionWorldException ignored )
@@ -127,12 +130,6 @@ public class OglofusListener implements Listener
             return;
         }
 
-        Effect effect;
-        if ( ( effect = getConfiguration().onPlaceEffect.getEffect() ) == null )
-        {
-            return;
-        }
-
         for ( Location location : event.getProtectionArea().getBlocksLocations() )
         {
             if ( !location.getBlock().getType().equals( Material.AIR ) )
@@ -143,7 +140,7 @@ public class OglofusListener implements Listener
             {
                 continue;
             }
-            location.getWorld().playEffect( location, effect, 1 );
+            getConfiguration().onPlaceEffect.playEffect( location, 1 );
         }
     }
 
@@ -159,12 +156,6 @@ public class OglofusListener implements Listener
             return;
         }
 
-        Effect effect;
-        if ( ( effect = getConfiguration().onBreakEffect.getEffect() ) == null )
-        {
-            return;
-        }
-
         for ( Location location : event.getProtectionArea().getBlocksLocations() )
         {
             if ( !location.getBlock().getType().equals( Material.AIR ) )
@@ -175,7 +166,7 @@ public class OglofusListener implements Listener
             {
                 continue;
             }
-            location.getWorld().playEffect( location, effect, 1 );
+            getConfiguration().onBreakEffect.playEffect( location, 1 );
         }
     }
 

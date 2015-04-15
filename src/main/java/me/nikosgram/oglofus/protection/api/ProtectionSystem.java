@@ -36,6 +36,8 @@ import me.nikosgram.oglofus.protection.api.exception.protection.*;
 import me.nikosgram.oglofus.protection.api.exception.protection.world.ProtectionWorldException;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nullable;
@@ -97,7 +99,12 @@ public final class ProtectionSystem
         return null;
     }
 
-    public static void createProtectionArea( Location location, @Nullable Player player )
+    public static ProtectionArea createProtectionArea( BlockPlaceEvent event )
+    {
+        return createProtectionArea( event.getBlock().getLocation(), event.getPlayer() );
+    }
+
+    public static ProtectionArea createProtectionArea( Location location, @Nullable Player player )
     {
         if ( !getConfiguration().allowWorld( notNull( location ).getWorld() ) )
         {
@@ -151,7 +158,7 @@ public final class ProtectionSystem
 
         if ( preProtectionPlaceEvent.isCancelled() )
         {
-            return;
+            return null;
         }
 
         int block_x = location.getBlockX(), block_y = location.getBlockY(), block_z = location.getBlockZ();
@@ -224,15 +231,16 @@ public final class ProtectionSystem
             getLanguage().protectionAreaCreated.sendMessage( player, new String[]{ "id" }, new String[]{ uuid.toString() } );
         }
         getLanguage().protectionAreaCreated.sendMessage( Bukkit.getConsoleSender(), new String[]{ "id" }, new String[]{ uuid.toString() } );
+        return area;
     }
 
-    public static void deleteProtectionRegion( ProtectionArea area, @Nullable Player player )
+    public static void deleteProtectionArea( ProtectionArea area, @Nullable Player player )
     {
         if ( notNull( area ).getRegion() == null )
         {
-            getPlugin().getLogger().warning( ChatColor.RED + "The ProtectedRegion not exists. '" + area.getUuid() + "'." );
+            log( ChatColor.RED + "The ProtectedRegion not exists. '" + area.getUuid() + "'." );
             configurationSystem.getModel().map.remove( area.getUuid() );
-            getPlugin().getLogger().warning( ChatColor.RED + "The ProtectionArea '" + area.getUuid() + "' deleted." );
+            log( ChatColor.RED + "The ProtectionArea '" + area.getUuid() + "' deleted." );
             throw new ProtectionRegionNullableException();
         }
         if ( player != null )
@@ -266,10 +274,15 @@ public final class ProtectionSystem
         {
             getLanguage().protectionAreaDeleted.sendMessage( player, new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
         }
-        getLanguage().protectionAreaDeleted.sendMessage(Bukkit.getConsoleSender(),  new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
+        getLanguage().protectionAreaDeleted.sendMessage( Bukkit.getConsoleSender(), new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
     }
 
-    public static void deleteProtectionRegion( Location location, @Nullable Player player )
+    public static void deleteProtectionArea( BlockBreakEvent event )
+    {
+        deleteProtectionArea( event.getBlock().getLocation(), event.getPlayer() );
+    }
+
+    public static void deleteProtectionArea( Location location, @Nullable Player player )
     {
         if ( !getConfiguration().allowWorld( notNull( location ).getWorld() ) )
         {
@@ -289,7 +302,7 @@ public final class ProtectionSystem
         {
             throw new ProtectionAreaNotExistsException( "&cNo protection areas." );
         }
-        deleteProtectionRegion( area, player );
+        deleteProtectionArea( area, player );
     }
 
     protected static void importProtectionArea( ProtectionArea area )
@@ -346,7 +359,7 @@ public final class ProtectionSystem
 
     public static void saveChanges()
     {
-        getPlugin().getLogger().info( "The system saving the regions..." );
+        log( "The system saving the regions..." );
         for ( World world : getConfiguration().getWorlds() )
         {
             try
@@ -362,6 +375,6 @@ public final class ProtectionSystem
             area.reFlag();
         }
         configurationSystem.save();
-        getPlugin().getLogger().info( "Saving completed!" );
+        log( "Saving completed!" );
     }
 }

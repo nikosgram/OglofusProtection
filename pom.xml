@@ -6,7 +6,7 @@
 
     <groupId>me.nikosgram</groupId>
     <artifactId>oglofus-protection</artifactId>
-    <version>1.8.3-R1.4-SNAPSHOT</version>
+    <version>1.8.3-R2.0</version>
     <name>OglofusProtection</name>
     <packaging>jar</packaging>
     <description>OglofusProtection allows a player to place a special block, and this protects their area from
@@ -15,7 +15,7 @@
 
     <developers>
         <developer>
-            <id>nikosgram</id>
+            <id>nikosgram13</id>
             <name>Nikos Grammatikos</name>
             <email>nikosgram@windowslive.com</email>
             <organization>Oglofus</organization>
