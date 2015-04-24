@@ -481,7 +481,7 @@ public class OglofusProtectionArea implements ProtectionArea
         Player player;
         if ( ( player = Bukkit.getPlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerOfflineException( getLanguage().playerOfflineException.getMessage(), target );
+            throw new PlayerOfflineException( getLanguage().getModel( getLanguage( sender ) ).playerOfflineException, target );
         }
         invite( sender, player );
     }
@@ -492,7 +492,7 @@ public class OglofusProtectionArea implements ProtectionArea
         Player player;
         if ( ( player = Bukkit.getPlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerOfflineException( target.toString(), getLanguage().playerOfflineException.getMessage() );
+            throw new PlayerOfflineException( target.toString(), getLanguage().getModel( getLanguage( sender ) ).playerOfflineException );
         }
         invite( sender, player );
     }
@@ -504,11 +504,11 @@ public class OglofusProtectionArea implements ProtectionArea
         {
             if ( !hasOwnerAccess( ( Player ) sender ) )
             {
-                throw new AccessException( getLanguage().accessException.getMessage() );
+                throw new AccessException( getLanguage().getModel( getLanguage( sender ) ).accessException );
             }
             if ( sender.getName().equals( target.getName() ) )
             {
-                throw new InviteYourSelfException( getLanguage().inviteYourSelfException.getMessage() );
+                throw new InviteYourSelfException( getLanguage().getModel( getLanguage( sender ) ).inviteYourSelfException );
             }
         }
         invite( target );
@@ -521,7 +521,7 @@ public class OglofusProtectionArea implements ProtectionArea
         Player player;
         if ( ( player = Bukkit.getPlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerOfflineException( getLanguage().playerOfflineException.getMessage(), target );
+            throw new PlayerOfflineException( getLanguage().getModel().playerOfflineException, target );
         }
         invite( player );
     }
@@ -532,7 +532,7 @@ public class OglofusProtectionArea implements ProtectionArea
         Player player;
         if ( ( player = Bukkit.getPlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerOfflineException( getLanguage().playerOfflineException.getMessage(), target.toString() );
+            throw new PlayerOfflineException( getLanguage().getModel().playerOfflineException, target.toString() );
         }
         invite( player );
     }
@@ -550,7 +550,7 @@ public class OglofusProtectionArea implements ProtectionArea
         OfflinePlayer player;
         if ( ( player = Bukkit.getOfflinePlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerNotExistsException( getLanguage().playerNotExistsException.getMessage(), target );
+            throw new PlayerNotExistsException( getLanguage().getModel( getLanguage( sender ) ).playerNotExistsException, target );
         }
         kick( sender, player );
     }
@@ -561,7 +561,7 @@ public class OglofusProtectionArea implements ProtectionArea
         OfflinePlayer player;
         if ( ( player = Bukkit.getOfflinePlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerNotExistsException( getLanguage().playerNotExistsException.getMessage(), target.toString() );
+            throw new PlayerNotExistsException( getLanguage().getModel( getLanguage( sender ) ).playerNotExistsException, target.toString() );
         }
         kick( sender, player );
     }
@@ -573,11 +573,11 @@ public class OglofusProtectionArea implements ProtectionArea
         {
             if ( !hasOwnerAccess( ( Player ) sender ) )
             {
-                throw new AccessException( getLanguage().accessException.getMessage() );
+                throw new AccessException( getLanguage().getModel( getLanguage( sender ) ).accessException );
             }
             if ( ( ( Player ) sender ).getUniqueId().equals( target.getUniqueId() ) )
             {
-                throw new KickYourSelfException( getLanguage().kickYourSelfException.getMessage() );
+                throw new KickYourSelfException( getLanguage().getModel( getLanguage( sender ) ).kickYourSelfException );
             }
         }
         kick( target );
@@ -590,7 +590,7 @@ public class OglofusProtectionArea implements ProtectionArea
         OfflinePlayer player;
         if ( ( player = Bukkit.getOfflinePlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerNotExistsException( getLanguage().playerNotExistsException.getMessage(), target );
+            throw new PlayerNotExistsException( getLanguage().getModel().playerNotExistsException, target );
         }
         kick( player );
     }
@@ -601,7 +601,7 @@ public class OglofusProtectionArea implements ProtectionArea
         OfflinePlayer player;
         if ( ( player = Bukkit.getOfflinePlayer( notNull( target ) ) ) == null )
         {
-            throw new PlayerNotExistsException( getLanguage().playerNotExistsException.getMessage(), target.toString() );
+            throw new PlayerNotExistsException( getLanguage().getModel().playerNotExistsException, target.toString() );
         }
         kick( player );
     }
@@ -611,7 +611,7 @@ public class OglofusProtectionArea implements ProtectionArea
     {
         if ( !isMember( notNull( target ) ) )
         {
-            throw new MemberNotExistsException( getLanguage().memberNotExistsException.getMessage(), target.getName() );
+            throw new MemberNotExistsException( getLanguage().getModel().memberNotExistsException, target.getName() );
         }
         getRegion().getMembers().removePlayer( target.getUniqueId() );
         Bukkit.getPluginManager().callEvent( new KickMemberEvent( this, target ) );

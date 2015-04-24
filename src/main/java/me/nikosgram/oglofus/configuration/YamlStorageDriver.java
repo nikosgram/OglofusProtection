@@ -35,7 +35,6 @@ public class YamlStorageDriver< T > implements StorageDriver< T >
     private static final Yaml YAML = new Yaml();
 
     protected final ConfigurationDriver< T > driver;
-    protected final Configuration            configuration;
     private final   Path                     path;
 
     private long modified = 0L;
@@ -43,89 +42,72 @@ public class YamlStorageDriver< T > implements StorageDriver< T >
     protected YamlStorageDriver( ConfigurationDriver< T > driver )
     {
         this.driver = driver;
-        configuration = driver.configuration.getAnnotation( Configuration.class );
-        path = Paths.get( driver.workDirectory.toString() + "/" + configuration.value() + ".yml" );
+        path = Paths.get( driver.workDirectory.toString() + "/" + driver.name + ".yml" );
     }
 
     public boolean create()
     {
         Path parent = path.getParent();
-        if ( !Files.exists( parent ) )
+        if ( !Files.exists( parent ) ) try
         {
-            try
-            {
-                Files.createDirectories( parent );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
+            Files.createDirectories( parent );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
         }
-        if ( !Files.exists( path ) )
+        if ( !Files.exists( path ) ) try
         {
-            try
-            {
-                Files.createFile( path );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
+            Files.createFile( path );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
         }
         return Files.exists( path );
     }
 
     public void save()
     {
-        if ( create() )
+        if ( !create() ) return;
+        try ( OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( path.toFile() ), Charset.forName( "UTF-8" ) ) )
         {
-            try ( OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( path.toFile() ), Charset.forName( "UTF-8" ) ) )
-            {
-                YAML.dump( driver.model, writer );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            try
-            {
-                modified = Files.getLastModifiedTime( path ).toMillis();
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
+            YAML.dump( driver.model, writer );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            modified = Files.getLastModifiedTime( path ).toMillis();
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
         }
     }
 
     public void load()
     {
-        if ( create() )
+        if ( !create() ) return;
+        try
         {
-            try
-            {
-                if ( Files.getLastModifiedTime( path ).toMillis() == modified )
-                {
-                    return;
-                }
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            try ( InputStreamReader reader = new InputStreamReader( new FileInputStream( path.toFile() ), Charset.forName( "UTF-8" ) ) )
-            {
-                YAML.loadAs( reader, driver.configuration );
-            } catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-            if ( driver.model == null )
-            {
-                try
-                {
-                    driver.model = driver.configuration.newInstance();
-                    save();
-                } catch ( InstantiationException | IllegalAccessException e )
-                {
-                    e.printStackTrace();
-                }
-            }
+            if ( Files.getLastModifiedTime( path ).toMillis() == modified ) return;
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        try ( InputStreamReader reader = new InputStreamReader( new FileInputStream( path.toFile() ), Charset.forName( "UTF-8" ) ) )
+        {
+            YAML.loadAs( reader, driver.configuration );
+        } catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        if ( driver.model == null ) try
+        {
+            driver.model = driver.configuration.newInstance();
+            save();
+        } catch ( InstantiationException | IllegalAccessException e )
+        {
+            e.printStackTrace();
         }
     }
 }

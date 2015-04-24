@@ -17,11 +17,13 @@
 package me.nikosgram.oglofus.protection;
 
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
-import me.nikosgram.oglofus.protection.api.MessageLang;
+import me.nikosgram.oglofus.language.Language;
+import me.nikosgram.oglofus.language.LanguageDriver;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -30,19 +32,83 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.lang.reflect.Field;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 public class OglofusProtection extends JavaPlugin
 {
     protected static ConfigurationDriver< OglofusConfiguration > configuration = null;
-    protected static ConfigurationDriver< OglofusLanguage >      language      = null;
+    protected static LanguageDriver< OglofusLanguage >           language      = null;
 
     protected static OglofusProtection plugin;
 
     public OglofusProtection()
     {
         plugin = this;
+    }
+
+    public static String getMessage( Language language, String id )
+    {
+        OglofusLanguage oglofusLanguage = OglofusProtection.language.getModel( language );
+        String          message         = null;
+        Field           field           = null;
+        try
+        {
+            field = oglofusLanguage.getClass().getDeclaredField( id );
+        } catch ( NoSuchFieldException e )
+        {
+            e.printStackTrace();
+        }
+        if ( field == null )
+        {
+            return null;
+        }
+        field.setAccessible( true );
+        Object object = null;
+        try
+        {
+            object = field.get( oglofusLanguage );
+        } catch ( IllegalAccessException e )
+        {
+            e.printStackTrace();
+        }
+        if ( !( object instanceof String ) )
+        {
+            return null;
+        }
+        return ( String ) object;
+    }
+
+    public static void sendMessage( CommandSender sender, String id, Map< String, String > values )
+    {
+        Language language = Language.English;
+        if ( sender instanceof Player )
+        {
+            language = getLanguage( sender );
+        }
+        sender.sendMessage( reformMessage( notNull( getMessage( language, id ) ), values ) );
+    }
+
+    public static void sendMessage( CommandSender sender, String id )
+    {
+        Language language = Language.English;
+        if ( sender instanceof Player )
+        {
+            language = getLanguage( sender );
+        }
+        sender.sendMessage( reformMessage( notNull( getMessage( language, id ) ) ) );
+    }
+
+    public static void sendMessage( CommandSender sender, String id, String[] keys, String[] values )
+    {
+        Language language = Language.English;
+        if ( sender instanceof Player )
+        {
+            language = getLanguage( sender );
+        }
+        sender.sendMessage( reformMessage( notNull( getMessage( language, id ) ), keys, values ) );
     }
 
     public static < T > T notNull( T object )
@@ -93,16 +159,13 @@ public class OglofusProtection extends JavaPlugin
         return ChatColor.translateAlternateColorCodes( '&', StrSubstitutor.replace( notEmpty( notNull( message ) ), ( values == null ? new HashMap< String, String >() : values ), "{", "}" ) );
     }
 
-    public static MessageLang getLanguage( Player p )
+    public static Language getLanguage( CommandSender sender )
     {
-        String locale = p.spigot().getLocale();
-        switch ( locale.substring( 0, 2 ).toLowerCase() )
+        if ( !( sender instanceof Player ) )
         {
-            case "el":
-                return MessageLang.Greek;
-            default:
-                return MessageLang.English;
+            return Language.English;
         }
+        return Language.getLanguage( ( ( Player ) sender ).spigot().getLocale().substring( 0, 2 ).toLowerCase() );
     }
 
     public static OglofusConfiguration getConfiguration()
@@ -110,9 +173,9 @@ public class OglofusProtection extends JavaPlugin
         return configuration.getModel();
     }
 
-    public static OglofusLanguage getLanguage()
+    public static LanguageDriver< OglofusLanguage > getLanguage()
     {
-        return language.getModel();
+        return language;
     }
 
     public static void configurationAction( ConfigurationAction action )
@@ -175,7 +238,7 @@ public class OglofusProtection extends JavaPlugin
                 }
                 if ( language == null )
                 {
-                    language = new ConfigurationDriver< OglofusLanguage >( OglofusLanguage.class, plugin.getDataFolder().toPath() ).load();
+                    language = new LanguageDriver< OglofusLanguage >( OglofusLanguage.class, Paths.get( plugin.getDataFolder().toPath().toString(), "/language" ) ).load();
                 } else
                 {
                     language.load();

@@ -58,7 +58,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
     {
         if ( !sender.hasPermission( cmd.getPermission() ) )
         {
-            getLanguage().accessException.sendMessage( sender );
+            sendMessage( sender, "accessException" );
             return true;
         }
         if ( args.length > 0 )
@@ -69,42 +69,43 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     sender.sendMessage( ChatColor.YELLOW + getPlugin().getDescription().getName() + " " + getPlugin().getDescription().getVersion() );
-                    new OglofusMessage( "&eAuthor: niksogram13", "&eΔημιουργός: nikosgram13" ).sendMessage( sender );
+                    sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).authorMessage + "nikosgram13" ) );
                     break;
                 }
                 case "reload":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
-                    new OglofusMessage( "&eThe system reloading...", "&eΤο σύστημα διαβάζει ξανά τα αρχεία διαμόρφωσης..." ).sendMessage( sender );
+                    sendMessage( sender, "forceReloadMessage" );
                     configurationAction( OglofusProtection.ConfigurationAction.RELOAD );
-                    new OglofusMessage( "&aReloading completed!", "&aΗ διαδικασία ολοκληρώθηκε!" ).sendMessage( sender );
+                    sendMessage( sender, "reloadCompletedMessage" );
                     break;
                 }
                 case "save":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
-                    new OglofusMessage( "&eThe system saving the regions...", "&eΤο σύστημα αποθηκεύει όλες τις προστατευόμενες περιοχές..." ).sendMessage( sender );
+
+                    sendMessage( sender, "forceRegionSaveMessage" );
                     ProtectionSystem.saveChanges();
-                    new OglofusMessage( "&aSaving completed!", "&aΗ διαδικασία ολοκληρώθηκε!" ).sendMessage( sender );
+                    sendMessage( sender, "saveCompletedMessage" );
                     break;
                 }
                 case "give":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     Material material = getConfiguration().getProtectionBlock();
@@ -136,7 +137,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                     {
                         if ( ( player = Bukkit.getPlayer( args[ 2 ] ) ) == null )
                         {
-                            getLanguage().playerOfflineException.sendMessage( sender, new String[]{ "player" }, new String[]{ args[ 2 ] } );
+                            sendMessage( sender, "playerOfflineException", new String[]{ "player" }, new String[]{ args[ 2 ] } );
                             break;
                         }
                     } else
@@ -155,7 +156,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     if ( args.length < 3 )
@@ -169,13 +170,13 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         Player player = ( Player ) sender;
                         if ( !getConfiguration().allowWorld( player.getWorld() ) )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         List< String > local_regions;
                         if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
                         {
-                            getLanguage().noAreas.sendMessage( player );
+                            sendMessage( sender, "noAreas" );
                             break;
                         }
                         UUID uuid = null;
@@ -189,7 +190,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         }
                         if ( uuid == null )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         ProtectionArea area;
@@ -202,20 +203,20 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                                 area.invite( sender, args[ 1 ] );
                             } catch ( AlreadyMemberException e )
                             {
-                                getLanguage().alreadyMemberException.sendMessage( player, values );
+                                sendMessage( sender, "alreadyMemberException", values );
                             } catch ( PlayerOfflineException e )
                             {
-                                getLanguage().playerOfflineException.sendMessage( player, values );
+                                sendMessage( sender, "playerOfflineException", values );
                             } catch ( AccessException e )
                             {
-                                getLanguage().accessException.sendMessage( player );
+                                sendMessage( sender, "accessException" );
                             } catch ( InviteYourSelfException e )
                             {
-                                getLanguage().inviteYourSelfException.sendMessage( player );
+                                sendMessage( sender, "inviteYourSelfException" );
                             }
                             break;
                         }
-                        getLanguage().noProtectionArea.sendMessage( ( ( Player ) sender ) );
+                        sendMessage( sender, "noProtectionArea" );
                         break;
                     }
                     if ( sender instanceof Player )
@@ -230,19 +231,19 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                             area.invite( sender, args[ 2 ] );
                         } catch ( AlreadyMemberException | PlayerOfflineException | AccessException | InviteYourSelfException e )
                         {
-                            sender.sendMessage( e.getMessage() );
+                            sender.sendMessage( reformMessage( e.getMessage() ) );
                         }
                         break;
                     }
 
-                    getLanguage().protectionAreaNotExists.sendMessage( sender, new String[]{ "id" }, new String[]{ args[ 2 ] } );
+                    sendMessage( sender, "protectionAreaNotExists", new String[]{ "id" }, new String[]{ args[ 2 ] } );
                     break;
                 }
                 case "info":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     if ( args.length < 2 )
@@ -256,13 +257,13 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         Player player = ( Player ) sender;
                         if ( !getConfiguration().allowWorld( player.getWorld() ) )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         List< String > local_regions;
                         if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
                         {
-                            getLanguage().noAreas.sendMessage( player );
+                            sendMessage( sender, "noAreas" );
                             break;
                         }
                         UUID uuid = null;
@@ -276,7 +277,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         }
                         if ( uuid == null )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         ProtectionArea area;
@@ -306,19 +307,19 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                             switch ( area.getRank( ( ( Player ) sender ) ) )
                             {
                                 case Owner:
-                                    getLanguage().ownerInfo.sendMessage( player, values );
+                                    sendMessage( sender, "ownerInfo", values );
                                     break;
                                 case Member:
-                                    getLanguage().memberInfo.sendMessage( player, values );
+                                    sendMessage( sender, "memberInfo", values );
                                     break;
                                 case None:
                                 default:
-                                    getLanguage().protectionAreaNotAccess.sendMessage( player );
+                                    sendMessage( sender, "protectionAreaNotAccess" );
                                     break;
                             }
                             break;
                         }
-                        getLanguage().noProtectionArea.sendMessage( player );
+                        sendMessage( sender, "noProtectionArea" );
                         break;
                     }
                     if ( sender instanceof Player )
@@ -357,17 +358,17 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         values.put( "location", area.getLocation().getX() + "," + area.getLocation().getBlockY() + "," + area.getLocation().getBlockZ() );
                         values.put( "vector", region.getMinimumPoint().toString() + ' ' + region.getMaximumPoint().toString() );
 
-                        getLanguage().ownerInfo.sendMessage( sender, values );
+                        sendMessage( sender, "ownerInfo", values );
                         break;
                     }
 
-                    getLanguage().protectionAreaNotExists.sendMessage( sender, new String[]{ "id" }, new String[]{ args[ 1 ] } );
+                    sendMessage( sender, "protectionAreaNotExists", new String[]{ "id" }, new String[]{ args[ 1 ] } );
                 }
                 case "kick":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     if ( args.length < 3 )
@@ -381,13 +382,13 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         Player player = ( Player ) sender;
                         if ( !getConfiguration().allowWorld( player.getWorld() ) )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         List< String > local_regions;
                         if ( ( local_regions = getRegionManager( player.getWorld() ).getApplicableRegionsIDs( WorldGuardPlugin.inst().wrapPlayer( player ).getPosition() ) ).size() < 1 )
                         {
-                            getLanguage().noAreas.sendMessage( player );
+                            sendMessage( sender, "noAreas" );
                             break;
                         }
                         UUID uuid = null;
@@ -401,7 +402,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         }
                         if ( uuid == null )
                         {
-                            getLanguage().noProtectionArea.sendMessage( player );
+                            sendMessage( sender, "noProtectionArea" );
                             break;
                         }
                         ProtectionArea area;
@@ -414,20 +415,20 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                                 area.kick( player, args[ 1 ] );
                             } catch ( AccessException e )
                             {
-                                getLanguage().accessException.sendMessage( player );
+                                sendMessage( sender, "accessException" );
                             } catch ( PlayerNotExistsException e )
                             {
-                                getLanguage().playerNotExistsException.sendMessage( player, values );
+                                sendMessage( sender, "playerNotExistsException", values );
                             } catch ( MemberNotExistsException e )
                             {
-                                getLanguage().memberNotExistsException.sendMessage( player, values );
+                                sendMessage( sender, "memberNotExistsException", values );
                             } catch ( KickYourSelfException e )
                             {
-                                getLanguage().kickYourSelfException.sendMessage( player );
+                                sendMessage( sender, "kickYourSelfException" );
                             }
                             break;
                         }
-                        getLanguage().noProtectionArea.sendMessage( player );
+                        sendMessage( sender, "noProtectionArea" );
                         break;
                     }
                     if ( sender instanceof Player )
@@ -451,27 +452,27 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                             area.kick( sender, args[ 2 ] );
                         } catch ( AccessException e )
                         {
-                            getLanguage().accessException.sendMessage( sender );
+                            sendMessage( sender, "accessException" );
                         } catch ( PlayerNotExistsException e )
                         {
-                            getLanguage().playerNotExistsException.sendMessage( sender );
+                            sendMessage( sender, "playerNotExistsException" );
                         } catch ( MemberNotExistsException e )
                         {
-                            getLanguage().memberNotExistsException.sendMessage( sender );
+                            sendMessage( sender, "memberNotExistsException" );
                         } catch ( KickYourSelfException e )
                         {
-                            getLanguage().kickYourSelfException.sendMessage( sender );
+                            sendMessage( sender, "kickYourSelfException" );
                         }
                         break;
                     }
-                    getLanguage().protectionAreaNotExists.sendMessage( sender, new String[]{ "{id}" }, new String[]{ args[ 2 ] } );
+                    sendMessage( sender, "protectionAreaNotExists", new String[]{ "{id}" }, new String[]{ args[ 2 ] } );
                     break;
                 }
                 case "accept":
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        getLanguage().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     if ( !( sender instanceof Player ) )
@@ -485,7 +486,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         InviteSystem.accept( ( Player ) sender );
                     } catch ( NoInvitesException e )
                     {
-                        getLanguage().noInvitesException.sendMessage( ( Player ) sender );
+                        sendMessage( sender, "noInvitesException" );
                     }
                     break;
                 }
@@ -493,7 +494,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                 {
                     if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 0 ].toLowerCase() ) )
                     {
-                        language.getModel().accessException.sendMessage( sender );
+                        sendMessage( sender, "accessException" );
                         break;
                     }
                     if ( args.length == 1 )
@@ -520,88 +521,88 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Get the OglofusProtection version", "&aΠεριγραφή: Εμφάνισε την εκδοχή του OglofusProtection" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase(), "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() ).sendMessage( sender );
+                                sendMessage( sender, "versionCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() ) );
                                 break;
                             }
                             case "reload":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Reload the OglofusProtection", "&aΠεριγραφή: Ανάγκασε το σύστημα να διαβάζει ξανά όλα τα αρχεία διαμόρφωσης" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase(), "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() ).sendMessage( sender );
+                                sendMessage( sender, "reloadCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() ) );
                                 break;
                             }
                             case "save":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Reload the OglofusProtection", "&aΠεριγραφή: Ανάγκασε το σύστημα να αποθηκεύσει όλες τις προστατευόμενες περιοχές" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase(), "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() ).sendMessage( sender );
+                                sendMessage( sender, "saveCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() ) );
                                 break;
                             }
                             case "give":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Giving to you or somebody some protection blocks", "&aΠεριγραφή: Δώσε σε εσένα ή σε κάποιον άλλον μερικά protection blocks" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase() + " <amount> [<player>]", "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() + " <ποσό> [<παίκτης>]" ).sendMessage( sender );
+                                sendMessage( sender, "giveCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() + " <amount> [<player>]" ) );
                                 break;
                             }
                             case "invite":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Invite a player at your region", "&aΠεριγραφή: Προσκάλεσε κάποιον παίκτη στην περιοχή σου" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase() + " <player> [<id>]", "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() + " <παίκτης> [<id>]" ).sendMessage( sender );
+                                sendMessage( sender, "inviteCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() + " <player> [<id>]" ) );
                                 break;
                             }
                             case "info":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Displaying the information in your region", "&aΠεριγραφή: Εμφάνιση των πληροφοριών της περιοχή σου" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase() + " [<id>]", "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() + " [<id>]" ).sendMessage( sender );
+                                sendMessage( sender, "infoCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() + " [<id>]" ) );
                                 break;
                             }
                             case "kick":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Banish a player from your region", "&aΠεριγραφή: Διώξε έναν παίκτη από την περιοχή σου" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase() + " <player> [<id>]", "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() + " <παίκτης> [<id>]" ).sendMessage( sender );
+                                sendMessage( sender, "kickCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() + " <player> [<id>]" ) );
                                 break;
                             }
                             case "accept":
                             {
                                 if ( !sender.hasPermission( cmd.getPermission() + "." + args[ 1 ].toLowerCase() ) )
                                 {
-                                    getLanguage().accessException.sendMessage( sender );
+                                    sendMessage( sender, "accessException" );
                                     break;
                                 }
-                                new OglofusMessage( "&aDescription: Accept a request to add in other region", "&aΠεριγραφή: Αποδέξου ένα αίτημα προσθήκης στην περιοχή κάποιου" ).sendMessage( sender );
-                                new OglofusMessage( "&aUsage: /" + s + " " + args[ 1 ].toLowerCase(), "&aΧρήση: /" + s + " " + args[ 1 ].toLowerCase() ).sendMessage( sender );
+                                sendMessage( sender, "acceptCommandDescription" );
+                                sender.sendMessage( reformMessage( getLanguage().getModel( getLanguage( sender ) ).usageCommandExample + s + " " + args[ 1 ].toLowerCase() ) );
                                 break;
                             }
                             default:

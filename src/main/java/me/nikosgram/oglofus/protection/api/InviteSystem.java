@@ -38,9 +38,7 @@ public final class InviteSystem
     {
         if ( notNull( area ).isMember( notNull( target ) ) )
         {
-            Map< String, String > values = new HashMap<>();
-            values.put( "player", target.getName() );
-            throw new AlreadyMemberException( target.getName(), getLanguage().alreadyMemberException.getMessage( values ) );
+            throw new AlreadyMemberException( target.getName(), getLanguage().getModel().alreadyMemberException );
         }
         if ( !MAP.containsKey( area.getUuid() ) )
         {
@@ -80,7 +78,7 @@ public final class InviteSystem
         }
         if ( area == null )
         {
-            throw new NoInvitesException( getLanguage().noInvitesException.getMessage() );
+            throw new NoInvitesException( getLanguage().getModel( getLanguage( target ) ).noInvitesException );
         }
         JoinMemberEvent event = new JoinMemberEvent( area, target );
         Bukkit.getPluginManager().callEvent( event );

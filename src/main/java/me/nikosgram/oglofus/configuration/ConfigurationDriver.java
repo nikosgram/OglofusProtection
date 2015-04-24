@@ -24,6 +24,7 @@ public class ConfigurationDriver< T >
     protected final Class< T >         configuration;
     protected final Path               workDirectory;
     protected final StorageDriver< T > driver;
+    protected final String             name;
 
     protected T model = null;
 
@@ -38,18 +39,33 @@ public class ConfigurationDriver< T >
         {
             throw new RuntimeException( "This class is not Configuration!" );
         }
+        this.name = configuration.getAnnotation( Configuration.class ).value();
         this.configuration = configuration;
         this.workDirectory = workDirectory;
+
         switch ( configuration.getAnnotation( Configuration.class ).type() )
         {
-            case Json:
-                driver = new JsonStorageDriver<>( this );
-                break;
             case Yaml:
                 driver = new YamlStorageDriver<>( this );
                 break;
             default:
-                driver = null;
+                driver = new JsonStorageDriver<>( this );
+        }
+    }
+
+    public ConfigurationDriver( Class< T > configuration, Path workDirectory, ConfigurationType type, String name )
+    {
+        this.name = name;
+        this.configuration = configuration;
+        this.workDirectory = workDirectory;
+
+        switch ( type )
+        {
+            case Yaml:
+                driver = new YamlStorageDriver<>( this );
+                break;
+            default:
+                driver = new JsonStorageDriver<>( this );
         }
     }
 

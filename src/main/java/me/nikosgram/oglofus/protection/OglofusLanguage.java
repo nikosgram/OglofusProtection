@@ -16,33 +16,44 @@
 
 package me.nikosgram.oglofus.protection;
 
-import me.nikosgram.oglofus.configuration.Configuration;
-
-@Configuration( "language" )
 public class OglofusLanguage
 {
-    public OglofusMessage accessException               = new OglofusMessage( "&cYou don't have access to do that.", "&cΔεν έχεις την άδεια να το κάνεις αυτό." );
-    public OglofusMessage alreadyMemberException        = new OglofusMessage( "&cThe player '{player}' is already member.", "&cΟ παίκτης '{player}' είναι ήδη member" );
-    public OglofusMessage inviteYourSelfException       = new OglofusMessage( "&cYou can't invite you.", "&cΔεν μπορείς να προσκαλέσεις τον εαυτό σου." );
-    public OglofusMessage kickYourSelfException         = new OglofusMessage( "&cYou can't kick you.", "&cΔεν μπορείς να διώξεις τον εαυτό σου." );
-    public OglofusMessage memberInfo                    = new OglofusMessage( "&eRegion &c{id}{n}&eOwners: &c{owners}{n}&eMembers: &c{members}" );
-    public OglofusMessage memberNotExistsException      = new OglofusMessage( "&cThe player '{player}' is not member at your Area.", "&cΟ player '{player}' δεν είναι member στην Area σας." );
-    public OglofusMessage noAreas                       = new OglofusMessage( "&cNo regions here.", "&cΔεν υπάρχουν regions εδώ." );
-    public OglofusMessage noInvitesException            = new OglofusMessage( "&cYou don't have invites...", "&cΔεν έχεις προσκλήσεις..." );
-    public OglofusMessage noProtectionArea              = new OglofusMessage( "&cNo protection areas here.", "&cΔεν υπάρχουν προστατευόμενες περιοχές εδώ." );
-    public OglofusMessage ownerInfo                     = new OglofusMessage( "&eRegion &e{id}{n}&eOwners: &c{owners}{n}&eMembers: &c{members}{n}&eBlock Location: &c{location}{n}&eRegion Vector: &c{vector}" );
-    public OglofusMessage playerNotExistsException      = new OglofusMessage( "&cThe player '{player}' doesn't exists.", "&cΟ παίκτης '{player}' δεν υπάρχει." );
-    public OglofusMessage playerOfflineException        = new OglofusMessage( "&cThe player '{player}' is not Online.", "&cΟ παίκτης '{player}' δεν είναι online." );
-    public OglofusMessage protectionAreaCreated         = new OglofusMessage( "&aThe region '{id}' created!", "&aΤο region '{id}' δημιουργήθηκε!" );
-    public OglofusMessage protectionAreaDeleted         = new OglofusMessage( "&cThe Protection Area with the ID '{id}' deleted!", "&cΤο region με το ID '{id}' διαγράφτικε!" );
-    public OglofusMessage protectionAreaMaxException    = new OglofusMessage( "&cYou can't build more Protection Areas.", "&cΔεν μπορείς να προσθέσεις και άλλες προστατευόμενες περιοχές." );
-    public OglofusMessage protectionAreaNotAccess       = new OglofusMessage( "&cYou don't have access here.", "&cΔεν έχεις δικαιώματα σε αυτή την περιοχή." );
-    public OglofusMessage protectionAreaNotExists       = new OglofusMessage( "&cProtection Area with the ID '{id}' doesn't exists." /*This is running only from the console.*/ );
-    public OglofusMessage protectionAreaPlaceException  = new OglofusMessage( "&cYou can't put your protection block here.", "&cΔεν μπορείς να τοποθετήσεις εδώ το protection block." );
-    public OglofusMessage protectionMemberInviteMessage = new OglofusMessage( "&aThe player '{player}' invited to the Protection Area with ID '{id}'", "&aΟ παίκτης '{player}' προσκλήθηκε στην προστατευόμενη περιοχή με ID '{id}'." );
-    public OglofusMessage protectionMemberJoinMessage   = new OglofusMessage( "&aThe player '{player}' has join to the Protection Area with ID '{id}'", "Ο παίκτης '{player}' εισήλθε στην προστατευόμενη περιοχή με ID '{id}'." );
-    public OglofusMessage protectionMemberKickMessage   = new OglofusMessage( "&aThe player '{player}' kicked from Protection Area with ID '{id}'", "Ο παίκτης '{player}' αφαιρέθηκε από την προστατευόμενη περιοχή με ID '{id}'." );
-    public OglofusMessage protectionTargetInviteMessage = new OglofusMessage( "&aYou have a invite request to join at the Protection Area with ID '{id}'.", "&aΣε έστειλαν πρόσκληση να εισέλθετε στην προστατευόμενη περιοχή με ID '{id}'" );
-    public OglofusMessage protectionTargetJoinMessage   = new OglofusMessage( "&aYou have join to the Protection Area with ID '{id}'", "&aΜόλις εισήλθες στην προστατευόμενη περιοχή με ID '{id}'" );
-    public OglofusMessage protectionTargetKickMessage   = new OglofusMessage( "&aYou kicked from the Protection Area with ID '{id}'", "&aΜόλις σε αφαίρεσαν από την προστατευόμενη περιοχή με ID '{id}'" );
+    public String accessException               = "&cYou don't have access to do that.";
+    public String alreadyMemberException        = "&cThe player '{player}' is already member.";
+    public String inviteYourSelfException       = "&cYou can't invite you.";
+    public String kickYourSelfException         = "&cYou can't kick you.";
+    public String memberInfo                    = "&eRegion &c{id}{n}&eOwners: &c{owners}{n}&eMembers: &c{members}";
+    public String memberNotExistsException      = "&cThe player '{player}' is not member at your Area.";
+    public String noAreas                       = "&cNo regions here.";
+    public String noInvitesException            = "&cYou don't have invites...";
+    public String noProtectionArea              = "&cNo protection areas here.";
+    public String ownerInfo                     = "&eRegion &e{id}{n}&eOwners: &c{owners}{n}&eMembers: &c{members}{n}&eBlock Location: &c{location}{n}&eRegion Vector: &c{vector}";
+    public String playerNotExistsException      = "&cThe player '{player}' doesn't exists.";
+    public String playerOfflineException        = "&cThe player '{player}' is not Online.";
+    public String protectionAreaCreated         = "&aThe region '{id}' created!";
+    public String protectionAreaDeleted         = "&cThe Protection Area with the ID '{id}' deleted!";
+    public String protectionAreaMaxException    = "&cYou can't build more Protection Areas.";
+    public String protectionAreaNotAccess       = "&cYou don't have access here.";
+    public String protectionAreaNotExists       = "&cProtection Area with the ID '{id}' doesn't exists.";
+    public String protectionAreaPlaceException  = "&cYou can't put your protection block here.";
+    public String protectionMemberInviteMessage = "&aThe player '{player}' invited to the Protection Area with ID '{id}'";
+    public String protectionMemberJoinMessage   = "&aThe player '{player}' has join to the Protection Area with ID '{id}'";
+    public String protectionMemberKickMessage   = "&aThe player '{player}' kicked from Protection Area with ID '{id}'";
+    public String protectionTargetInviteMessage = "&aYou have a invite request to join at the Protection Area with ID '{id}'.";
+    public String protectionTargetJoinMessage   = "&aYou have join to the Protection Area with ID '{id}'";
+    public String protectionTargetKickMessage   = "&aYou kicked from the Protection Area with ID '{id}'";
+    public String forceRegionSaveMessage        = "&eThe system saving the regions...";
+    public String saveCompletedMessage          = "&aSaving completed!";
+    public String reloadCompletedMessage        = "&aReloading completed!";
+    public String forceReloadMessage            = "&eThe system reloading...";
+    public String authorMessage                 = "&eAuthor: ";
+    public String versionCommandDescription     = "&aDescription: Get the OglofusProtection version";
+    public String reloadCommandDescription      = "&aDescription: Reload the OglofusProtection";
+    public String saveCommandDescription        = "&aDescription: Save the OglofusProtection";
+    public String giveCommandDescription        = "&aDescription: Giving to you or somebody some protection blocks";
+    public String inviteCommandDescription      = "&aDescription: Invite a player at your region";
+    public String infoCommandDescription        = "&aDescription: Displaying the information in your region";
+    public String kickCommandDescription        = "&aDescription: Banish a player from your region";
+    public String acceptCommandDescription      = "&aDescription: Accept a request to add in other region";
+    public String usageCommandExample           = "&aUsage: /";
 }

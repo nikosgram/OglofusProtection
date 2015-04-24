@@ -69,14 +69,16 @@ public class OglofusListener implements Listener
         {
         } catch ( MaxProtectionAreasException e )
         {
-            getLanguage().protectionAreaMaxException.sendMessage( event.getPlayer() );
+            sendMessage( event.getPlayer(), "protectionAreaMaxException" );
+            event.setCancelled( true );
         } catch ( ProtectionRadiusIsZeroException e )
         {
             event.getPlayer().sendRawMessage( reformMessage( "&cError 0x0R1" ) );
             e.printStackTrace();
+            event.setCancelled( true );
         } catch ( ProtectionAreaPlaceException e )
         {
-            getLanguage().protectionAreaPlaceException.sendMessage( event.getPlayer() );
+            sendMessage( event.getPlayer(), "protectionAreaPlaceException" );
             event.setCancelled( true );
         }
     }
@@ -111,7 +113,7 @@ public class OglofusListener implements Listener
             e.printStackTrace();
         } catch ( AccessException e )
         {
-            getLanguage().protectionAreaNotAccess.sendMessage( event.getPlayer() );
+            sendMessage( event.getPlayer(), "protectionAreaNotAccess" );
             event.setCancelled( true );
         }
     }
@@ -181,14 +183,14 @@ public class OglofusListener implements Listener
 
         for ( Player player : area.getOnlinePlayers() )
         {
-            getLanguage().protectionMemberKickMessage.sendMessage( player, messages );
+            sendMessage( player, "protectionMemberKickMessage", messages );
         }
         Player target;
         if ( ( target = event.getTarget().getPlayer() ) != null )
         {
-            getLanguage().protectionTargetKickMessage.sendMessage( target );
+            sendMessage( target, "protectionTargetKickMessage" );
         }
-        getLanguage().protectionMemberKickMessage.sendMessage( Bukkit.getConsoleSender(), messages );
+        sendMessage( Bukkit.getConsoleSender(), "protectionMemberKickMessage", messages );
     }
 
     @EventHandler( priority = EventPriority.LOWEST )
@@ -206,10 +208,10 @@ public class OglofusListener implements Listener
 
         for ( Player player : area.getOnlinePlayers() )
         {
-            getLanguage().protectionMemberInviteMessage.sendMessage( player, messages );
+            sendMessage( player, "protectionMemberInviteMessage", messages );
         }
 
-        event.getTarget().sendRawMessage( getLanguage().protectionTargetInviteMessage.getMessage( messages ) );
+        sendMessage( event.getTarget(), "protectionTargetInviteMessage", messages );
 
         TextComponent message = new TextComponent( "If you want to join " );
         message.setColor( net.md_5.bungee.api.ChatColor.GREEN );
@@ -221,7 +223,7 @@ public class OglofusListener implements Listener
         message.addExtra( " or type /protection accept" );
         event.getTarget().spigot().sendMessage( message );
 
-        getLanguage().protectionMemberInviteMessage.sendMessage( Bukkit.getConsoleSender(), messages );
+        sendMessage( Bukkit.getConsoleSender(), "protectionMemberInviteMessage", messages );
     }
 
     @EventHandler( priority = EventPriority.LOWEST )
@@ -243,9 +245,9 @@ public class OglofusListener implements Listener
             {
                 continue;
             }
-            getLanguage().protectionMemberJoinMessage.sendMessage( member, messages );
+            sendMessage( member, "protectionMemberJoinMessage", messages );
         }
-        getLanguage().protectionTargetJoinMessage.sendMessage( event.getTarget(), messages );
-        getLanguage().protectionMemberJoinMessage.sendMessage( Bukkit.getConsoleSender(), messages );
+        sendMessage( event.getTarget(), "protectionTargetJoinMessage", messages );
+        sendMessage( Bukkit.getConsoleSender(), "protectionMemberJoinMessage", messages );
     }
 }

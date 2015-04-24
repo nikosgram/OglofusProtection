@@ -144,7 +144,7 @@ public final class ProtectionSystem
         {
             if ( !canBuildProtectionArea( player ) )
             {
-                throw new MaxProtectionAreasException( getLanguage().protectionAreaMaxException.getMessage() );
+                throw new MaxProtectionAreasException( getLanguage().getModel( getLanguage( player ) ).protectionAreaMaxException );
             }
         }
         int radius;
@@ -197,7 +197,7 @@ public final class ProtectionSystem
 
         if ( getRegionManager( location.getWorld() ).getApplicableRegions( protectedRegion ).size() > 0 )
         {
-            throw new ProtectionAreaPlaceException( getLanguage().protectionAreaPlaceException.getMessage() );
+            throw new ProtectionAreaPlaceException( getLanguage().getModel( getLanguage( player ) ).protectionAreaPlaceException );
         }
 
         if ( player != null )
@@ -228,9 +228,9 @@ public final class ProtectionSystem
 
         if ( player != null )
         {
-            getLanguage().protectionAreaCreated.sendMessage( player, new String[]{ "id" }, new String[]{ uuid.toString() } );
+            sendMessage( player, "protectionAreaCreated", new String[]{ "id" }, new String[]{ uuid.toString() } );
         }
-        getLanguage().protectionAreaCreated.sendMessage( Bukkit.getConsoleSender(), new String[]{ "id" }, new String[]{ uuid.toString() } );
+        sendMessage( Bukkit.getConsoleSender(), "protectionAreaCreated", new String[]{ "id" }, new String[]{ uuid.toString() } );
         return area;
     }
 
@@ -247,7 +247,7 @@ public final class ProtectionSystem
         {
             if ( !area.hasOwnerAccess( player ) )
             {
-                throw new AccessException( getLanguage().accessException.getMessage() );
+                throw new AccessException( getLanguage().getModel( getLanguage( player ) ).accessException );
             }
         }
         PreProtectionBreakEvent preProtectionBreakEvent = new PreProtectionBreakEvent( area, player );
@@ -272,9 +272,9 @@ public final class ProtectionSystem
         Bukkit.getPluginManager().callEvent( new ProtectionBreakEvent( area, player ) );
         if ( player != null )
         {
-            getLanguage().protectionAreaDeleted.sendMessage( player, new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
+            sendMessage( player, "protectionAreaDeleted", new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
         }
-        getLanguage().protectionAreaDeleted.sendMessage( Bukkit.getConsoleSender(), new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
+        sendMessage( Bukkit.getConsoleSender(), "protectionAreaDeleted", new String[]{ "id" }, new String[]{ area.getUuid().toString() } );
     }
 
     public static void deleteProtectionArea( BlockBreakEvent event )
