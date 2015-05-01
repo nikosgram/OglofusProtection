@@ -38,6 +38,7 @@ public class OglofusConfiguration
     public long                  autoReloadDelay    = 300000;
     public long                  autoCancelDelay    = 60000;
     public OglofusEffect         wallEffect         = new OglofusEffect( "HAPPY_VILLAGER", true, 0, 10 );
+    public int                   wallEffectDelay    = 20;
 
     public Material getProtectionBlock()
     {

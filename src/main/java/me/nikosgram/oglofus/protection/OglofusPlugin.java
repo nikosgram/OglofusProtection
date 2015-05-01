@@ -379,8 +379,20 @@ public class OglofusPlugin extends JavaPlugin
                 {
                     return;
                 }
+                if ( Bukkit.getOnlinePlayers().isEmpty() )
+                {
+                    return;
+                }
                 for ( ProtectionArea area : ProtectionSystem.getProtectionAreas() )
                 {
+                    if ( !area.getLocation().getChunk().isLoaded() )
+                    {
+                        continue;
+                    }
+                    if ( !area.getWorld().isChunkInUse( area.getLocation().getChunk().getX(), area.getLocation().getChunk().getZ() ) )
+                    {
+                        continue;
+                    }
                     CuboidRegion region = new CuboidRegion( area.getRegion().getMinimumPoint(), area.getRegion().getMaximumPoint() );
                     for ( BlockVector vector : region.getWalls() )
                     {
@@ -411,7 +423,7 @@ public class OglofusPlugin extends JavaPlugin
                     }
                 }
             }
-        }, 10, 10 );
+        }, getConfiguration().wallEffectDelay, getConfiguration().wallEffectDelay );
     }
 
     public enum ConfigurationAction
