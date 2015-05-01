@@ -6,7 +6,7 @@
 
     <groupId>me.nikosgram</groupId>
     <artifactId>oglofus-protection</artifactId>
-    <version>1.8.3-R3.0-SNAPSHOT</version>
+    <version>1.8.3-R3.0</version>
     <name>OglofusProtection</name>
     <description>
         OglofusProtection allows a player to place a special block, and this protects their area from griefing!
