@@ -23,7 +23,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
-import me.nikosgram.oglofus.protection.OglofusProtection;
+import me.nikosgram.oglofus.protection.OglofusPlugin;
 import me.nikosgram.oglofus.protection.OglofusProtectionArea;
 import me.nikosgram.oglofus.protection.OglofusProtections;
 import me.nikosgram.oglofus.protection.api.event.player.PreProtectionPlaceEvent;
@@ -46,13 +46,13 @@ import java.util.Collection;
 import java.util.UUID;
 
 import static com.sk89q.worldguard.bukkit.WGBukkit.getRegionManager;
-import static me.nikosgram.oglofus.protection.OglofusProtection.*;
+import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 
 public final class ProtectionSystem
 {
     private static ConfigurationDriver< OglofusProtections > configurationSystem = null;
 
-    public static void invoke( OglofusProtection plugin )
+    public static void invoke( OglofusPlugin plugin )
     {
         if ( configurationSystem != null )
         {
@@ -169,11 +169,11 @@ public final class ProtectionSystem
         /**
          * This is the minimum location and its height the {@link min_y}
          *
-         *   0---------0
+         *   A---------B
          *   |         |
          *   | Regions |
          *   |         |
-         *  (0)--------0
+         *  (D)--------C
          *
          *  But as 3D.
          */
@@ -181,11 +181,11 @@ public final class ProtectionSystem
         /**
          * This is the maximum location and its height the {@link max_y}
          *
-         *   0--------(0)
+         *   A--------(B)
          *   |         |
          *   | Regions |
          *   |         |
-         *   0---------0
+         *   D---------C
          *
          *  But as 3D.
          */

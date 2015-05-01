@@ -16,13 +16,18 @@
 
 package me.nikosgram.oglofus.protection;
 
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
+import me.nikosgram.oglofus.configuration.ConfigurationType;
 import me.nikosgram.oglofus.language.Language;
 import me.nikosgram.oglofus.language.LanguageDriver;
+import me.nikosgram.oglofus.protection.api.ProtectionArea;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -37,22 +42,21 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OglofusProtection extends JavaPlugin
+public class OglofusPlugin extends JavaPlugin
 {
     protected static ConfigurationDriver< OglofusConfiguration > configuration = null;
     protected static LanguageDriver< OglofusLanguage >           language      = null;
 
-    protected static OglofusProtection plugin;
+    protected static OglofusPlugin plugin;
 
-    public OglofusProtection()
+    public OglofusPlugin()
     {
         plugin = this;
     }
 
     public static String getMessage( Language language, String id )
     {
-        OglofusLanguage oglofusLanguage = OglofusProtection.language.getModel( language );
-        String          message         = null;
+        OglofusLanguage oglofusLanguage = OglofusPlugin.language.getModel( language );
         Field           field           = null;
         try
         {
@@ -238,7 +242,7 @@ public class OglofusProtection extends JavaPlugin
                 }
                 if ( language == null )
                 {
-                    language = new LanguageDriver< OglofusLanguage >( OglofusLanguage.class, Paths.get( plugin.getDataFolder().toPath().toString(), "/language" ) ).load();
+                    language = new LanguageDriver< OglofusLanguage >( OglofusLanguage.class, Paths.get( plugin.getDataFolder().toPath().toString(), "/language" ), ConfigurationType.Json ).load();
                 } else
                 {
                     language.load();
@@ -263,7 +267,7 @@ public class OglofusProtection extends JavaPlugin
         }
     }
 
-    public static OglofusProtection getPlugin()
+    public static OglofusPlugin getPlugin()
     {
         return plugin;
     }
@@ -343,11 +347,11 @@ public class OglofusProtection extends JavaPlugin
         /**
          * Registering commands...
          */
-        OglofusCommandExecute oglofusCommandExecute = new OglofusCommandExecute();
+        OglofusCommandExecutor oglofusCommandExecutor = new OglofusCommandExecutor();
 
         PluginCommand command = Bukkit.getPluginCommand( "protection" );
-        command.setExecutor( oglofusCommandExecute );
-        command.setTabCompleter( oglofusCommandExecute );
+        command.setExecutor( oglofusCommandExecutor );
+        command.setTabCompleter( oglofusCommandExecutor );
 
         /**
          * Registering listeners...
@@ -366,6 +370,48 @@ public class OglofusProtection extends JavaPlugin
                 ProtectionSystem.saveChanges();
             }
         }, getConfiguration().autoReloadDelay, getConfiguration().autoReloadDelay );
+        scheduler.runTaskTimer( this, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if ( !getConfiguration().wallEffect.enabled )
+                {
+                    return;
+                }
+                for ( ProtectionArea area : ProtectionSystem.getProtectionAreas() )
+                {
+                    CuboidRegion region = new CuboidRegion( area.getRegion().getMinimumPoint(), area.getRegion().getMaximumPoint() );
+                    for ( BlockVector vector : region.getWalls() )
+                    {
+                        Location location = area.getWorld().getBlockAt( vector.getBlockX(), vector.getBlockY(), vector.getBlockZ() ).getLocation();
+
+                        switch ( location.getBlock().getType() )
+                        {
+                            case AIR:
+                            case VINE:
+                            case LONG_GRASS:
+                            {
+                                switch ( location.getWorld().getBlockAt( location.getBlockX(), location.getBlockY() - 1, location.getBlockZ() ).getType() )
+                                {
+                                    case AIR:
+                                    case VINE:
+                                    case LONG_GRASS:
+                                    case LEAVES:
+                                    case LEAVES_2:
+                                        break;
+                                    default:
+                                        getConfiguration().wallEffect.playEffect( location );
+                                }
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }, 10, 10 );
     }
 
     public enum ConfigurationAction

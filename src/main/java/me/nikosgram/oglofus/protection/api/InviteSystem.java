@@ -17,7 +17,7 @@
 package me.nikosgram.oglofus.protection.api;
 
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
-import me.nikosgram.oglofus.protection.OglofusProtection;
+import me.nikosgram.oglofus.protection.OglofusPlugin;
 import me.nikosgram.oglofus.protection.api.event.protection.InvitePlayerEvent;
 import me.nikosgram.oglofus.protection.api.event.protection.JoinMemberEvent;
 import me.nikosgram.oglofus.protection.api.exception.member.AlreadyMemberException;
@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-import static me.nikosgram.oglofus.protection.OglofusProtection.*;
+import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 import static me.nikosgram.oglofus.protection.api.ProtectionSystem.getProtectionArea;
 
 public final class InviteSystem
@@ -56,7 +56,7 @@ public final class InviteSystem
             return;
         }
         MAP.get( area.getUuid() ).add( target.getUniqueId() );
-        Bukkit.getScheduler().runTaskLater( OglofusProtection.getPlugin(), new Runnable()
+        Bukkit.getScheduler().runTaskLater( OglofusPlugin.getPlugin(), new Runnable()
         {
             @Override
             public void run()

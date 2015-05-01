@@ -6,11 +6,10 @@
 
     <groupId>me.nikosgram</groupId>
     <artifactId>oglofus-protection</artifactId>
-    <version>1.8.3-R2.2-SNAPSHOT</version>
+    <version>1.8.3-R2.3-SNAPSHOT</version>
     <name>OglofusProtection</name>
-    <packaging>jar</packaging>
-    <description>OglofusProtection allows a player to place a special block, and this protects their area from
-        griefing!
+    <description>
+        OglofusProtection allows a player to place a special block, and this protects their area from griefing!
     </description>
 
     <developers>
@@ -30,6 +29,7 @@
     <properties>
         <javac.version>1.7</javac.version>
         <gson.version>2.3.1</gson.version>
+        <snakeyaml.version>1.9</snakeyaml.version>
         <spigot.version>1.8-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
@@ -76,12 +76,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.esotericsoftware.yamlbeans</groupId>
-            <artifactId>yamlbeans</artifactId>
-            <version>1.09</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.0.2-SNAPSHOT</version>
@@ -118,7 +112,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.basedir}/GlofalEconomyApi/src/main/java/</source>
+                                <source>${project.basedir}/OglofusCommons/src/main/java/</source>
                                 <source>${project.basedir}/src/main/java/</source>
                             </sources>
                         </configuration>

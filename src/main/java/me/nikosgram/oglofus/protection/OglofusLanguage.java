@@ -47,9 +47,9 @@ public class OglofusLanguage
     public String reloadCompletedMessage        = "&aReloading completed!";
     public String forceReloadMessage            = "&eThe system reloading...";
     public String authorMessage                 = "&eAuthor: ";
-    public String versionCommandDescription     = "&aDescription: Get the OglofusProtection version";
-    public String reloadCommandDescription      = "&aDescription: Reload the OglofusProtection";
-    public String saveCommandDescription        = "&aDescription: Save the OglofusProtection";
+    public String versionCommandDescription     = "&aDescription: Get the OglofusPlugin version";
+    public String reloadCommandDescription      = "&aDescription: Reload the OglofusPlugin";
+    public String saveCommandDescription        = "&aDescription: Save the OglofusPlugin";
     public String giveCommandDescription        = "&aDescription: Giving to you or somebody some protection blocks";
     public String inviteCommandDescription      = "&aDescription: Invite a player at your region";
     public String infoCommandDescription        = "&aDescription: Displaying the information in your region";

@@ -1,6 +1,6 @@
 name: ${project.name}
 version: ${project.version}
-main: me.nikosgram.oglofus.protection.OglofusProtection
+main: me.nikosgram.oglofus.protection.OglofusPlugin
 softdepend: [WorldEdit, WorldGuard]
 description: ${project.description}
 author: nikosgram13

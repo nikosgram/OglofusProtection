@@ -18,7 +18,18 @@ package me.nikosgram.oglofus.protection.api;
 
 public enum ProtectionRank
 {
+    /**
+     * The owner has access to destroy the {@link ProtectionArea}
+     */
     Owner,
+
+    /**
+     * The member has access to build inside from the {@link ProtectionArea}
+     */
     Member,
+
+    /**
+     * The none hasn't access to the {@link ProtectionArea}
+     */
     None
 }

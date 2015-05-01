@@ -47,21 +47,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.nikosgram.oglofus.protection.OglofusProtection.*;
+import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 
 public class OglofusListener implements Listener
 {
     @EventHandler( priority = EventPriority.MONITOR )
     public void createProtection( BlockPlaceEvent event )
     {
-        if ( event.isCancelled() )
-        {
-            return;
-        }
-        if ( !event.canBuild() )
-        {
-            return;
-        }
+        if ( event.isCancelled() ) return;
+        if ( !event.canBuild() ) return;
         try
         {
             ProtectionSystem.createProtectionArea( event );
@@ -86,10 +80,7 @@ public class OglofusListener implements Listener
     @EventHandler( priority = EventPriority.MONITOR )
     public void destroyProtection( BlockBreakEvent event )
     {
-        if ( event.isCancelled() )
-        {
-            return;
-        }
+        if ( event.isCancelled() ) return;
         try
         {
             ProtectionSystem.deleteProtectionArea( event );
@@ -127,11 +118,7 @@ public class OglofusListener implements Listener
     @EventHandler( priority = EventPriority.LOWEST )
     public void onProtectionPlace( ProtectionPlaceEvent event )
     {
-        if ( !getConfiguration().onPlaceEffect.enabled )
-        {
-            return;
-        }
-
+        if ( !getConfiguration().onPlaceEffect.enabled ) return;
         for ( Location location : event.getProtectionArea().getBlocksLocations() )
         {
             if ( !location.getBlock().getType().equals( Material.AIR ) )
@@ -142,22 +129,15 @@ public class OglofusListener implements Listener
             {
                 continue;
             }
-            getConfiguration().onPlaceEffect.playEffect( location, 1 );
+            getConfiguration().onPlaceEffect.playEffect( location );
         }
     }
 
     @EventHandler( priority = EventPriority.LOWEST )
     public void onProtectionBreak( PreProtectionBreakEvent event )
     {
-        if ( event.isCancelled() )
-        {
-            return;
-        }
-        if ( !getConfiguration().onBreakEffect.enabled )
-        {
-            return;
-        }
-
+        if ( event.isCancelled() ) return;
+        if ( !getConfiguration().onBreakEffect.enabled ) return;
         for ( Location location : event.getProtectionArea().getBlocksLocations() )
         {
             if ( !location.getBlock().getType().equals( Material.AIR ) )
@@ -168,7 +148,7 @@ public class OglofusListener implements Listener
             {
                 continue;
             }
-            getConfiguration().onBreakEffect.playEffect( location, 1 );
+            getConfiguration().onBreakEffect.playEffect( location );
         }
     }
 
@@ -196,10 +176,7 @@ public class OglofusListener implements Listener
     @EventHandler( priority = EventPriority.LOWEST )
     public void onInvitePlayer( InvitePlayerEvent event )
     {
-        if ( event.isCancelled() )
-        {
-            return;
-        }
+        if ( event.isCancelled() ) return;
         ProtectionArea area = event.getProtectionArea();
 
         Map< String, String > messages = new HashMap< String, String >();
@@ -229,10 +206,7 @@ public class OglofusListener implements Listener
     @EventHandler( priority = EventPriority.LOWEST )
     public void onJoinMember( JoinMemberEvent event )
     {
-        if ( event.isCancelled() )
-        {
-            return;
-        }
+        if ( event.isCancelled() ) return;
         ProtectionArea area = event.getProtectionArea();
 
         Map< String, String > messages = new HashMap< String, String >();

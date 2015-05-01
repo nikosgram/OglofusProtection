@@ -69,4 +69,15 @@ public class OglofusProtectionLocation
     {
         return new Location( getWorld(), x, y, z );
     }
+
+    @Override
+    public String toString()
+    {
+        return "OglofusProtectionLocation{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ", world=" + world +
+                '}';
+    }
 }

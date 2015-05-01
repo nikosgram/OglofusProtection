@@ -38,13 +38,14 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
 import static com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst;
-import static me.nikosgram.oglofus.protection.OglofusProtection.*;
+import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 
 public class OglofusProtectionArea implements ProtectionArea
 {
@@ -268,15 +269,29 @@ public class OglofusProtectionArea implements ProtectionArea
     }
 
     @Override
-    public boolean hasOwnerAccess( Player target )
+    public boolean hasOwnerAccess( OfflinePlayer target )
     {
-        return notNull( target ).isOp() || target.hasPermission( "oglofus.protection.bypass" ) || isOwner( target );
+        return target.isOp() || getRank( target ).equals( ProtectionRank.Owner ) || target instanceof Permissible && ( ( Permissible ) target ).hasPermission( "oglofus.protection.bypass" );
     }
 
     @Override
-    public boolean hasMemberAccess( Player target )
+    public boolean hasMemberAccess( OfflinePlayer target )
     {
-        return notNull( target ).isOp() || target.hasPermission( "oglofus.protection.bypass" ) || isMember( target );
+        return target.isOp() || getRank( target ).equals( ProtectionRank.Member ) || target instanceof Permissible && ( ( Permissible ) target ).hasPermission( "oglofus.protection.bypass" );
+    }
+
+    @Override
+    public boolean hasOwnerAccess( UUID target )
+    {
+        OfflinePlayer player;
+        return ( player = Bukkit.getOfflinePlayer( target ) ) != null && hasOwnerAccess( player );
+    }
+
+    @Override
+    public boolean hasMemberAccess( UUID target )
+    {
+        OfflinePlayer player;
+        return ( player = Bukkit.getOfflinePlayer( target ) ) != null && hasMemberAccess( player );
     }
 
     @Override
@@ -336,35 +351,62 @@ public class OglofusProtectionArea implements ProtectionArea
     @Deprecated
     public Player getMember( String target )
     {
-        return getMember( notNull( Bukkit.getPlayer( notNull( target ) ), "The player '" + target + "' doesn't exists." ).getUniqueId() );
+        Player player;
+        if ( ( player = Bukkit.getPlayer( notEmpty( notNull( target ) ) ) ) == null )
+        {
+            return null;
+        }
+        if ( !getRank( player.getUniqueId() ).equals( ProtectionRank.Member ) )
+        {
+            return null;
+        }
+        return player;
     }
 
     @Override
     @Deprecated
     public OfflinePlayer getOfflineMember( String target )
     {
-        return getOfflineMember( notNull( Bukkit.getOfflinePlayer( notNull( target ) ), "The player '" + target + "' doesn't exists." ).getUniqueId() );
+        OfflinePlayer player;
+        if ( ( player = Bukkit.getOfflinePlayer( notEmpty( notNull( target ) ) ) ) == null )
+        {
+            return null;
+        }
+        if ( !getRank( player.getUniqueId() ).equals( ProtectionRank.Member ) )
+        {
+            return null;
+        }
+        return player;
     }
 
     @Override
     public Player getMember( UUID target )
     {
-        OfflinePlayer member = getOfflineMember( notNull( target ) );
-        if ( member == null )
+        Player player;
+        if ( ( player = Bukkit.getPlayer( notNull( target ) ) ) == null )
         {
             return null;
         }
-        return member.getPlayer();
+        if ( !getRank( player.getUniqueId() ).equals( ProtectionRank.Member ) )
+        {
+            return null;
+        }
+        return player;
     }
 
     @Override
     public OfflinePlayer getOfflineMember( UUID target )
     {
-        if ( getMembersUuid().contains( notNull( target ) ) )
+        OfflinePlayer player;
+        if ( ( player = Bukkit.getOfflinePlayer( notNull( target ) ) ) == null )
         {
-            return Bukkit.getOfflinePlayer( target );
+            return null;
         }
-        return null;
+        if ( !getRank( player.getUniqueId() ).equals( ProtectionRank.Member ) )
+        {
+            return null;
+        }
+        return player;
     }
 
     @Override
@@ -374,7 +416,7 @@ public class OglofusProtectionArea implements ProtectionArea
     }
 
     @Override
-    public ProtectionRank getRank( Player target )
+    public ProtectionRank getRank( OfflinePlayer target )
     {
         return isOwner( notNull( target ) ) ? ProtectionRank.Owner : ( isMember( target ) ? ProtectionRank.Member : ProtectionRank.None );
     }
@@ -498,7 +540,7 @@ public class OglofusProtectionArea implements ProtectionArea
     }
 
     @Override
-    public void invite( CommandSender sender, Player target )
+    public void invite( CommandSender sender, OfflinePlayer target )
     {
         if ( sender instanceof Player )
         {
@@ -538,9 +580,13 @@ public class OglofusProtectionArea implements ProtectionArea
     }
 
     @Override
-    public void invite( Player target )
+    public void invite( OfflinePlayer target )
     {
-        InviteSystem.invite( target, this );
+        if ( target instanceof Player )
+        {
+            InviteSystem.invite( ( Player ) target, this );
+        }
+        throw new PlayerOfflineException( getLanguage().getModel().playerOfflineException, target.toString() );
     }
 
     @Override
@@ -622,5 +668,14 @@ public class OglofusProtectionArea implements ProtectionArea
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "OglofusProtectionArea{" +
+                "regionUID=" + regionUID +
+                ", location=" + location +
+                '}';
     }
 }

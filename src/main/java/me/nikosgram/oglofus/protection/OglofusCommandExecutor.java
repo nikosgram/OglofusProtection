@@ -45,13 +45,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 import static com.sk89q.worldguard.bukkit.WGBukkit.getRegionManager;
-import static me.nikosgram.oglofus.protection.OglofusProtection.*;
+import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 
-public class OglofusCommandExecute implements CommandExecutor, TabCompleter
+public class OglofusCommandExecutor implements CommandExecutor, TabCompleter
 {
     private final String[] commands = new String[]{ "help", "version", "reload", "save", "give", "invite", "info", "kick", "accept" };
 
-    protected OglofusCommandExecute() {}
+    protected OglofusCommandExecutor() {}
 
     @Override
     public boolean onCommand( CommandSender sender, Command cmd, String s, String[] args )
@@ -84,7 +84,7 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                         break;
                     }
                     sendMessage( sender, "forceReloadMessage" );
-                    configurationAction( OglofusProtection.ConfigurationAction.RELOAD );
+                    configurationAction( OglofusPlugin.ConfigurationAction.RELOAD );
                     sendMessage( sender, "reloadCompletedMessage" );
                     break;
                 }
@@ -304,19 +304,17 @@ public class OglofusCommandExecute implements CommandExecutor, TabCompleter
                             values.put( "location", area.getLocation().getX() + "," + area.getLocation().getBlockY() + "," + area.getLocation().getBlockZ() );
                             values.put( "vector", region.getMinimumPoint().toString() + ' ' + region.getMaximumPoint().toString() );
 
-                            switch ( area.getRank( ( ( Player ) sender ) ) )
+                            if ( area.hasOwnerAccess( ( Player ) sender ) )
                             {
-                                case Owner:
-                                    sendMessage( sender, "ownerInfo", values );
-                                    break;
-                                case Member:
+                                sendMessage( sender, "ownerInfo", values );
+                            } else
+                                if ( area.hasMemberAccess( ( Player ) sender ) )
+                                {
                                     sendMessage( sender, "memberInfo", values );
-                                    break;
-                                case None:
-                                default:
+                                } else
+                                {
                                     sendMessage( sender, "protectionAreaNotAccess" );
-                                    break;
-                            }
+                                }
                             break;
                         }
                         sendMessage( sender, "noProtectionArea" );

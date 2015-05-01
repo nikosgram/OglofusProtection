@@ -23,13 +23,11 @@ import org.bukkit.World;
 
 import java.util.*;
 
-import static me.nikosgram.oglofus.protection.OglofusProtection.notNull;
-
 @Configuration( "config" )
 public class OglofusConfiguration
 {
-    public OglofusEffect         onBreakEffect      = new OglofusEffect( "FLAME", true );
-    public OglofusEffect         onPlaceEffect      = new OglofusEffect( "CLOUD", true );
+    public OglofusEffect         onBreakEffect      = new OglofusEffect( "FLAME", true, 20, 10 );
+    public OglofusEffect         onPlaceEffect      = new OglofusEffect( "CLOUD", true, 20, 10 );
     public String                protectionBlock    = "SPONGE";
     public Map< String, Object > protectionFlags    = new HashMap< String, Object >();
     public OglofusLimits         protectionLimits   = new OglofusLimits();
@@ -39,20 +37,35 @@ public class OglofusConfiguration
     public String                protectionMetaData = "metadata";
     public long                  autoReloadDelay    = 300000;
     public long                  autoCancelDelay    = 60000;
+    public OglofusEffect         wallEffect         = new OglofusEffect( "HAPPY_VILLAGER", true, 0, 10 );
 
     public Material getProtectionBlock()
     {
         return Material.matchMaterial( protectionBlock );
     }
 
-    public boolean allowWorld( World world )
+    public boolean allowWorld( World target )
     {
-        return allowWorld( notNull( world ).getName() );
+        for ( World world : getWorlds() )
+        {
+            if ( world.getUID().equals( target.getUID() ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean allowWorld( String world )
+    public boolean allowWorld( String target )
     {
-        return protectionWorlds.contains( notNull( world ) );
+        for ( World world : getWorlds() )
+        {
+            if ( world.getName().equalsIgnoreCase( target ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Collection< World > getWorlds()
