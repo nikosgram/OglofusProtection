@@ -16,7 +16,6 @@
 
 package me.nikosgram.oglofus.protection.api;
 
-import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;

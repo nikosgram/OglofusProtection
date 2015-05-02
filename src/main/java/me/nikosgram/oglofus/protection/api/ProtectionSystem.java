@@ -16,7 +16,9 @@
 
 package me.nikosgram.oglofus.protection.api;
 
+import com.darkblade12.particleeffect.ParticleEffect;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -39,11 +41,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 import static com.sk89q.worldguard.bukkit.WGBukkit.getRegionManager;
 import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
@@ -51,6 +52,7 @@ import static me.nikosgram.oglofus.protection.OglofusPlugin.*;
 public final class ProtectionSystem
 {
     private static ConfigurationDriver< OglofusProtections > configurationSystem = null;
+    private static Map< UUID, BukkitTask >                   effectTaskMap       = new HashMap< UUID, BukkitTask >();
 
     public static void invoke( OglofusPlugin plugin )
     {
@@ -231,6 +233,8 @@ public final class ProtectionSystem
             sendMessage( player, "protectionAreaCreated", new String[]{ "id" }, new String[]{ uuid.toString() } );
         }
         sendMessage( Bukkit.getConsoleSender(), "protectionAreaCreated", new String[]{ "id" }, new String[]{ uuid.toString() } );
+
+        startEffect( area );
         return area;
     }
 
@@ -269,6 +273,8 @@ public final class ProtectionSystem
         }
         configurationSystem.getModel().map.remove( area.getUuid() );
 
+        stopEffect( area );
+
         Bukkit.getPluginManager().callEvent( new ProtectionBreakEvent( area, player ) );
         if ( player != null )
         {
@@ -280,6 +286,113 @@ public final class ProtectionSystem
     public static void deleteProtectionArea( BlockBreakEvent event )
     {
         deleteProtectionArea( event.getBlock().getLocation(), event.getPlayer() );
+    }
+
+    public static void stopEffects()
+    {
+        for ( ProtectionArea area : getProtectionAreas() )
+        {
+            stopEffect( area );
+        }
+    }
+
+    public static void stopEffect( ProtectionArea area )
+    {
+        stopEffect( notNull( area ).getUuid() );
+    }
+
+    public static void stopEffect( UUID uuid )
+    {
+        if ( effectTaskMap.containsKey( notNull( uuid ) ) )
+        {
+            effectTaskMap.get( uuid ).cancel();
+            effectTaskMap.remove( uuid );
+        }
+    }
+
+    public static void startEffects()
+    {
+        for ( ProtectionArea area : getProtectionAreas() )
+        {
+            startEffect( area );
+        }
+    }
+
+    public static void startEffect( ProtectionArea area )
+    {
+        startEffect( notNull( area ).getUuid() );
+    }
+
+    public static void startEffect( final UUID uuid )
+    {
+        if ( effectTaskMap.containsKey( notNull( uuid ) ) )
+        {
+            effectTaskMap.get( uuid ).cancel();
+            effectTaskMap.remove( uuid );
+        }
+        effectTaskMap.put( uuid, Bukkit.getScheduler().runTaskTimer( OglofusPlugin.getPlugin(), new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ProtectionArea area = getProtectionArea( uuid );
+                if ( area == null )
+                {
+                    effectTaskMap.get( uuid ).cancel();
+                    effectTaskMap.remove( uuid );
+                    return;
+                }
+                if ( area.getRegion() == null )
+                {
+                    removeProtectionArena( area );
+                    return;
+                }
+                if ( !getConfiguration().allowWallEffect )
+                {
+                    return;
+                }
+                if ( Bukkit.getOnlinePlayers().isEmpty() )
+                {
+                    return;
+                }
+                if ( !area.getLocation().getChunk().isLoaded() )
+                {
+                    return;
+                }
+                if ( !area.getWorld().isChunkInUse( area.getLocation().getChunk().getX(), area.getLocation().getChunk().getZ() ) )
+                {
+                    return;
+                }
+                CuboidRegion region = new CuboidRegion( area.getRegion().getMinimumPoint(), area.getRegion().getMaximumPoint() );
+                for ( BlockVector vector : region.getWalls() )
+                {
+                    Location location = area.getWorld().getBlockAt( vector.getBlockX(), vector.getBlockY(), vector.getBlockZ() ).getLocation();
+
+                    switch ( location.getBlock().getType() )
+                    {
+                        case AIR:
+                        case VINE:
+                        case LONG_GRASS:
+                        {
+                            switch ( location.getWorld().getBlockAt( location.getBlockX(), location.getBlockY() - 1, location.getBlockZ() ).getType() )
+                            {
+                                case AIR:
+                                case VINE:
+                                case LONG_GRASS:
+                                case LEAVES:
+                                case LEAVES_2:
+                                    break;
+                                default:
+                                    ParticleEffect.VILLAGER_HAPPY.display( location.getDirection(), getConfiguration().wallEffectDelay, location, getConfiguration().wallEffectDelay );
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
+            }
+        }, getConfiguration().wallEffectDelay, getConfiguration().wallEffectDelay ) );
     }
 
     public static void deleteProtectionArea( Location location, @Nullable Player player )
@@ -321,6 +434,15 @@ public final class ProtectionSystem
             return;
         }
         configurationSystem.getModel().map.remove( area.getUuid() );
+    }
+
+    public static void removeProtectionArena( UUID area )
+    {
+        if ( !configurationSystem.getModel().map.containsKey( notNull( area ) ) )
+        {
+            return;
+        }
+        configurationSystem.getModel().map.remove( area );
     }
 
     protected static UUID generateDatabaseUUID()
@@ -376,5 +498,14 @@ public final class ProtectionSystem
         }
         configurationSystem.save();
         log( "Saving completed!" );
+    }
+
+    protected class EffectTimer extends TimerTask
+    {
+        @Override
+        public void run()
+        {
+
+        }
     }
 }

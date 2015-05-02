@@ -16,18 +16,14 @@
 
 package me.nikosgram.oglofus.protection;
 
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import me.nikosgram.oglofus.configuration.ConfigurationDriver;
 import me.nikosgram.oglofus.configuration.ConfigurationType;
 import me.nikosgram.oglofus.language.Language;
 import me.nikosgram.oglofus.language.LanguageDriver;
-import me.nikosgram.oglofus.protection.api.ProtectionArea;
 import me.nikosgram.oglofus.protection.api.ProtectionSystem;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -215,6 +211,7 @@ public class OglofusPlugin extends JavaPlugin
                         Bukkit.getPluginManager().removePermission( permission );
                     }
                 }
+                ProtectionSystem.startEffects();
                 for ( String limit : getConfiguration().protectionLimits.other.keySet() )
                 {
                     boolean exists = false;
@@ -289,6 +286,7 @@ public class OglofusPlugin extends JavaPlugin
     @Override
     public void onDisable()
     {
+        ProtectionSystem.stopEffects();
         ProtectionSystem.saveChanges();
     }
 
@@ -370,60 +368,6 @@ public class OglofusPlugin extends JavaPlugin
                 ProtectionSystem.saveChanges();
             }
         }, getConfiguration().autoReloadDelay, getConfiguration().autoReloadDelay );
-        scheduler.runTaskTimer( this, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if ( !getConfiguration().wallEffect.enabled )
-                {
-                    return;
-                }
-                if ( Bukkit.getOnlinePlayers().isEmpty() )
-                {
-                    return;
-                }
-                for ( ProtectionArea area : ProtectionSystem.getProtectionAreas() )
-                {
-                    if ( !area.getLocation().getChunk().isLoaded() )
-                    {
-                        continue;
-                    }
-                    if ( !area.getWorld().isChunkInUse( area.getLocation().getChunk().getX(), area.getLocation().getChunk().getZ() ) )
-                    {
-                        continue;
-                    }
-                    CuboidRegion region = new CuboidRegion( area.getRegion().getMinimumPoint(), area.getRegion().getMaximumPoint() );
-                    for ( BlockVector vector : region.getWalls() )
-                    {
-                        Location location = area.getWorld().getBlockAt( vector.getBlockX(), vector.getBlockY(), vector.getBlockZ() ).getLocation();
-
-                        switch ( location.getBlock().getType() )
-                        {
-                            case AIR:
-                            case VINE:
-                            case LONG_GRASS:
-                            {
-                                switch ( location.getWorld().getBlockAt( location.getBlockX(), location.getBlockY() - 1, location.getBlockZ() ).getType() )
-                                {
-                                    case AIR:
-                                    case VINE:
-                                    case LONG_GRASS:
-                                    case LEAVES:
-                                    case LEAVES_2:
-                                        break;
-                                    default:
-                                        getConfiguration().wallEffect.playEffect( location );
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                    }
-                }
-            }
-        }, getConfiguration().wallEffectDelay, getConfiguration().wallEffectDelay );
     }
 
     public enum ConfigurationAction
