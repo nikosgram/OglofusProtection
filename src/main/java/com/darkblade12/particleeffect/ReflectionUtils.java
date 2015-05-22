@@ -46,7 +46,9 @@ public final class ReflectionUtils
         Class< ? >[] primitiveTypes = DataType.getPrimitive( parameterTypes );
         for ( Constructor< ? > constructor : clazz.getConstructors() )
         {
-            if ( !DataType.compare( DataType.getPrimitive( constructor.getParameterTypes() ), primitiveTypes ) )
+            if ( !DataType.compare(
+                    DataType.getPrimitive( constructor.getParameterTypes() ), primitiveTypes
+            ) )
             {
                 continue;
             }
@@ -68,7 +70,9 @@ public final class ReflectionUtils
      */
     public static Constructor< ? > getConstructor( String className, PackageType packageType, Class< ? >... parameterTypes ) throws NoSuchMethodException, ClassNotFoundException
     {
-        return getConstructor( packageType.getClass( className ), parameterTypes );
+        return getConstructor(
+                packageType.getClass( className ), parameterTypes
+        );
     }
 
     /**
@@ -85,7 +89,9 @@ public final class ReflectionUtils
      */
     public static Object instantiateObject( Class< ? > clazz, Object... arguments ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
     {
-        return getConstructor( clazz, DataType.getPrimitive( arguments ) ).newInstance( arguments );
+        return getConstructor(
+                clazz, DataType.getPrimitive( arguments )
+        ).newInstance( arguments );
     }
 
     /**
@@ -105,7 +111,9 @@ public final class ReflectionUtils
      */
     public static Object instantiateObject( String className, PackageType packageType, Object... arguments ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException
     {
-        return instantiateObject( packageType.getClass( className ), arguments );
+        return instantiateObject(
+                packageType.getClass( className ), arguments
+        );
     }
 
     /**
@@ -124,13 +132,17 @@ public final class ReflectionUtils
         Class< ? >[] primitiveTypes = DataType.getPrimitive( parameterTypes );
         for ( Method method : clazz.getMethods() )
         {
-            if ( !method.getName().equals( methodName ) || !DataType.compare( DataType.getPrimitive( method.getParameterTypes() ), primitiveTypes ) )
+            if ( !method.getName().equals( methodName ) || !DataType.compare(
+                    DataType.getPrimitive( method.getParameterTypes() ), primitiveTypes
+            ) )
             {
                 continue;
             }
             return method;
         }
-        throw new NoSuchMethodException( "There is no such method in this class with the specified name and parameter types" );
+        throw new NoSuchMethodException(
+                "There is no such method in this class with the specified name and parameter types"
+        );
     }
 
     /**
@@ -147,7 +159,9 @@ public final class ReflectionUtils
      */
     public static Method getMethod( String className, PackageType packageType, String methodName, Class< ? >... parameterTypes ) throws NoSuchMethodException, ClassNotFoundException
     {
-        return getMethod( packageType.getClass( className ), methodName, parameterTypes );
+        return getMethod(
+                packageType.getClass( className ), methodName, parameterTypes
+        );
     }
 
     /**
@@ -166,7 +180,11 @@ public final class ReflectionUtils
      */
     public static Object invokeMethod( Object instance, String methodName, Object... arguments ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
     {
-        return getMethod( instance.getClass(), methodName, DataType.getPrimitive( arguments ) ).invoke( instance, arguments );
+        return getMethod(
+                instance.getClass(), methodName, DataType.getPrimitive( arguments )
+        ).invoke(
+                instance, arguments
+        );
     }
 
     /**
@@ -186,7 +204,11 @@ public final class ReflectionUtils
      */
     public static Object invokeMethod( Object instance, Class< ? > clazz, String methodName, Object... arguments ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
     {
-        return getMethod( clazz, methodName, DataType.getPrimitive( arguments ) ).invoke( instance, arguments );
+        return getMethod(
+                clazz, methodName, DataType.getPrimitive( arguments )
+        ).invoke(
+                instance, arguments
+        );
     }
 
     /**
@@ -207,7 +229,9 @@ public final class ReflectionUtils
      */
     public static Object invokeMethod( Object instance, String className, PackageType packageType, String methodName, Object... arguments ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException
     {
-        return invokeMethod( instance, packageType.getClass( className ), methodName, arguments );
+        return invokeMethod(
+                instance, packageType.getClass( className ), methodName, arguments
+        );
     }
 
     /**
@@ -242,7 +266,9 @@ public final class ReflectionUtils
      */
     public static Field getField( String className, PackageType packageType, boolean declared, String fieldName ) throws NoSuchFieldException, SecurityException, ClassNotFoundException
     {
-        return getField( packageType.getClass( className ), declared, fieldName );
+        return getField(
+                packageType.getClass( className ), declared, fieldName
+        );
     }
 
     /**
@@ -261,7 +287,9 @@ public final class ReflectionUtils
      */
     public static Object getValue( Object instance, Class< ? > clazz, boolean declared, String fieldName ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
-        return getField( clazz, declared, fieldName ).get( instance );
+        return getField(
+                clazz, declared, fieldName
+        ).get( instance );
     }
 
     /**
@@ -282,7 +310,9 @@ public final class ReflectionUtils
      */
     public static Object getValue( Object instance, String className, PackageType packageType, boolean declared, String fieldName ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, ClassNotFoundException
     {
-        return getValue( instance, packageType.getClass( className ), declared, fieldName );
+        return getValue(
+                instance, packageType.getClass( className ), declared, fieldName
+        );
     }
 
     /**
@@ -300,7 +330,9 @@ public final class ReflectionUtils
      */
     public static Object getValue( Object instance, boolean declared, String fieldName ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
-        return getValue( instance, instance.getClass(), declared, fieldName );
+        return getValue(
+                instance, instance.getClass(), declared, fieldName
+        );
     }
 
     /**
@@ -319,7 +351,11 @@ public final class ReflectionUtils
      */
     public static void setValue( Object instance, Class< ? > clazz, boolean declared, String fieldName, Object value ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
-        getField( clazz, declared, fieldName ).set( instance, value );
+        getField(
+                clazz, declared, fieldName
+        ).set(
+                instance, value
+        );
     }
 
     /**
@@ -340,7 +376,9 @@ public final class ReflectionUtils
      */
     public static void setValue( Object instance, String className, PackageType packageType, boolean declared, String fieldName, Object value ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, ClassNotFoundException
     {
-        setValue( instance, packageType.getClass( className ), declared, fieldName, value );
+        setValue(
+                instance, packageType.getClass( className ), declared, fieldName, value
+        );
     }
 
     /**
@@ -358,7 +396,9 @@ public final class ReflectionUtils
      */
     public static void setValue( Object instance, boolean declared, String fieldName, Object value ) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
-        setValue( instance, instance.getClass(), declared, fieldName, value );
+        setValue(
+                instance, instance.getClass(), declared, fieldName, value
+        );
     }
 
     /**
@@ -371,26 +411,66 @@ public final class ReflectionUtils
      */
     public enum PackageType
     {
-        MINECRAFT_SERVER( "net.minecraft.server." + getServerVersion() ),
-        CRAFTBUKKIT( "org.bukkit.craftbukkit." + getServerVersion() ),
-        CRAFTBUKKIT_BLOCK( CRAFTBUKKIT, "block" ),
-        CRAFTBUKKIT_CHUNKIO( CRAFTBUKKIT, "chunkio" ),
-        CRAFTBUKKIT_COMMAND( CRAFTBUKKIT, "command" ),
-        CRAFTBUKKIT_CONVERSATIONS( CRAFTBUKKIT, "conversations" ),
-        CRAFTBUKKIT_ENCHANTMENS( CRAFTBUKKIT, "enchantments" ),
-        CRAFTBUKKIT_ENTITY( CRAFTBUKKIT, "entity" ),
-        CRAFTBUKKIT_EVENT( CRAFTBUKKIT, "event" ),
-        CRAFTBUKKIT_GENERATOR( CRAFTBUKKIT, "generator" ),
-        CRAFTBUKKIT_HELP( CRAFTBUKKIT, "help" ),
-        CRAFTBUKKIT_INVENTORY( CRAFTBUKKIT, "inventory" ),
-        CRAFTBUKKIT_MAP( CRAFTBUKKIT, "map" ),
-        CRAFTBUKKIT_METADATA( CRAFTBUKKIT, "metadata" ),
-        CRAFTBUKKIT_POTION( CRAFTBUKKIT, "potion" ),
-        CRAFTBUKKIT_PROJECTILES( CRAFTBUKKIT, "projectiles" ),
-        CRAFTBUKKIT_SCHEDULER( CRAFTBUKKIT, "scheduler" ),
-        CRAFTBUKKIT_SCOREBOARD( CRAFTBUKKIT, "scoreboard" ),
-        CRAFTBUKKIT_UPDATER( CRAFTBUKKIT, "updater" ),
-        CRAFTBUKKIT_UTIL( CRAFTBUKKIT, "util" );
+        MINECRAFT_SERVER(
+                "net.minecraft.server." + getServerVersion()
+        ),
+        CRAFTBUKKIT(
+                "org.bukkit.craftbukkit." + getServerVersion()
+        ),
+        CRAFTBUKKIT_BLOCK(
+                CRAFTBUKKIT, "block"
+        ),
+        CRAFTBUKKIT_CHUNKIO(
+                CRAFTBUKKIT, "chunkio"
+        ),
+        CRAFTBUKKIT_COMMAND(
+                CRAFTBUKKIT, "command"
+        ),
+        CRAFTBUKKIT_CONVERSATIONS(
+                CRAFTBUKKIT, "conversations"
+        ),
+        CRAFTBUKKIT_ENCHANTMENS(
+                CRAFTBUKKIT, "enchantments"
+        ),
+        CRAFTBUKKIT_ENTITY(
+                CRAFTBUKKIT, "entity"
+        ),
+        CRAFTBUKKIT_EVENT(
+                CRAFTBUKKIT, "event"
+        ),
+        CRAFTBUKKIT_GENERATOR(
+                CRAFTBUKKIT, "generator"
+        ),
+        CRAFTBUKKIT_HELP(
+                CRAFTBUKKIT, "help"
+        ),
+        CRAFTBUKKIT_INVENTORY(
+                CRAFTBUKKIT, "inventory"
+        ),
+        CRAFTBUKKIT_MAP(
+                CRAFTBUKKIT, "map"
+        ),
+        CRAFTBUKKIT_METADATA(
+                CRAFTBUKKIT, "metadata"
+        ),
+        CRAFTBUKKIT_POTION(
+                CRAFTBUKKIT, "potion"
+        ),
+        CRAFTBUKKIT_PROJECTILES(
+                CRAFTBUKKIT, "projectiles"
+        ),
+        CRAFTBUKKIT_SCHEDULER(
+                CRAFTBUKKIT, "scheduler"
+        ),
+        CRAFTBUKKIT_SCOREBOARD(
+                CRAFTBUKKIT, "scoreboard"
+        ),
+        CRAFTBUKKIT_UPDATER(
+                CRAFTBUKKIT, "updater"
+        ),
+        CRAFTBUKKIT_UTIL(
+                CRAFTBUKKIT, "util"
+        );
 
         private final String path;
 
@@ -412,7 +492,11 @@ public final class ReflectionUtils
          */
         private PackageType( PackageType parent, String path )
         {
-            this( parent + "." + path );
+            this(
+                    parent +
+                            "." +
+                            path
+            );
         }
 
         /**
@@ -444,7 +528,11 @@ public final class ReflectionUtils
          */
         public Class< ? > getClass( String className ) throws ClassNotFoundException
         {
-            return Class.forName( this + "." + className );
+            return Class.forName(
+                    this +
+                            "." +
+                            className
+            );
         }
 
         // Override for convenience
@@ -465,14 +553,30 @@ public final class ReflectionUtils
      */
     public enum DataType
     {
-        BYTE( byte.class, Byte.class ),
-        SHORT( short.class, Short.class ),
-        INTEGER( int.class, Integer.class ),
-        LONG( long.class, Long.class ),
-        CHARACTER( char.class, Character.class ),
-        FLOAT( float.class, Float.class ),
-        DOUBLE( double.class, Double.class ),
-        BOOLEAN( boolean.class, Boolean.class );
+        BYTE(
+                byte.class, Byte.class
+        ),
+        SHORT(
+                short.class, Short.class
+        ),
+        INTEGER(
+                int.class, Integer.class
+        ),
+        LONG(
+                long.class, Long.class
+        ),
+        CHARACTER(
+                char.class, Character.class
+        ),
+        FLOAT(
+                float.class, Float.class
+        ),
+        DOUBLE(
+                double.class, Double.class
+        ),
+        BOOLEAN(
+                boolean.class, Boolean.class
+        );
 
         private static final Map< Class< ? >, DataType > CLASS_MAP = new HashMap< Class< ? >, DataType >();
 
@@ -481,8 +585,12 @@ public final class ReflectionUtils
         {
             for ( DataType type : values() )
             {
-                CLASS_MAP.put( type.primitive, type );
-                CLASS_MAP.put( type.reference, type );
+                CLASS_MAP.put(
+                        type.primitive, type
+                );
+                CLASS_MAP.put(
+                        type.reference, type
+                );
             }
         }
 
@@ -613,7 +721,9 @@ public final class ReflectionUtils
          */
         public static boolean compare( Class< ? >[] primary, Class< ? >[] secondary )
         {
-            if ( primary == null || secondary == null || primary.length != secondary.length )
+            if ( primary == null ||
+                    secondary == null ||
+                    primary.length != secondary.length )
             {
                 return false;
             }

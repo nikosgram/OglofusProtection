@@ -48,7 +48,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    EXPLOSION_NORMAL( "explode", 0, -1, ParticleProperty.DIRECTIONAL ),
+    EXPLOSION_NORMAL(
+            "explode", 0, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by exploding ghast fireballs and wither skulls:
      * <ul>
@@ -56,7 +58,9 @@ public enum ParticleEffect
      * <li>The speed value slightly influences the size of this particle effect
      * </ul>
      */
-    EXPLOSION_LARGE( "largeexplode", 1, -1 ),
+    EXPLOSION_LARGE(
+            "largeexplode", 1, -1
+    ),
     /**
      * A particle effect which is displayed by exploding tnt and creepers:
      * <ul>
@@ -64,7 +68,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    EXPLOSION_HUGE( "hugeexplosion", 2, -1 ),
+    EXPLOSION_HUGE(
+            "hugeexplosion", 2, -1
+    ),
     /**
      * A particle effect which is displayed by launching fireworks:
      * <ul>
@@ -72,7 +78,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    FIREWORKS_SPARK( "fireworksSpark", 3, -1, ParticleProperty.DIRECTIONAL ),
+    FIREWORKS_SPARK(
+            "fireworksSpark", 3, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by swimming entities and arrows in water:
      * <ul>
@@ -80,7 +88,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    WATER_BUBBLE( "bubble", 4, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_WATER ),
+    WATER_BUBBLE(
+            "bubble", 4, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_WATER
+    ),
     /**
      * A particle effect which is displayed by swimming entities and shaking wolves:
      * <ul>
@@ -88,7 +98,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    WATER_SPLASH( "splash", 5, -1, ParticleProperty.DIRECTIONAL ),
+    WATER_SPLASH(
+            "splash", 5, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed on water when fishing:
      * <ul>
@@ -96,7 +108,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    WATER_WAKE( "wake", 6, 7, ParticleProperty.DIRECTIONAL ),
+    WATER_WAKE(
+            "wake", 6, 7, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by water:
      * <ul>
@@ -104,7 +118,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    SUSPENDED( "suspended", 7, -1, ParticleProperty.REQUIRES_WATER ),
+    SUSPENDED(
+            "suspended", 7, -1, ParticleProperty.REQUIRES_WATER
+    ),
     /**
      * A particle effect which is displayed by air when close to bedrock and the in the void:
      * <ul>
@@ -112,7 +128,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    SUSPENDED_DEPTH( "depthSuspend", 8, -1, ParticleProperty.DIRECTIONAL ),
+    SUSPENDED_DEPTH(
+            "depthSuspend", 8, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed when landing a critical hit and by arrows:
      * <ul>
@@ -120,7 +138,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    CRIT( "crit", 9, -1, ParticleProperty.DIRECTIONAL ),
+    CRIT(
+            "crit", 9, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed when landing a hit with an enchanted weapon:
      * <ul>
@@ -128,7 +148,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    CRIT_MAGIC( "magicCrit", 10, -1, ParticleProperty.DIRECTIONAL ),
+    CRIT_MAGIC(
+            "magicCrit", 10, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by primed tnt, torches, droppers, dispensers, end portals, brewing stands and monster spawners:
      * <ul>
@@ -136,7 +158,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    SMOKE_NORMAL( "smoke", 11, -1, ParticleProperty.DIRECTIONAL ),
+    SMOKE_NORMAL(
+            "smoke", 11, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by fire, minecarts with furnace and blazes:
      * <ul>
@@ -144,7 +168,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    SMOKE_LARGE( "largesmoke", 12, -1, ParticleProperty.DIRECTIONAL ),
+    SMOKE_LARGE(
+            "largesmoke", 12, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed when splash potions or bottles o' enchanting hit something:
      * <ul>
@@ -153,7 +179,9 @@ public enum ParticleEffect
      * <li>Only the motion on the y-axis can be controlled, the motion on the x- and z-axis are multiplied by 0.1 when setting the values to 0
      * </ul>
      */
-    SPELL( "spell", 13, -1 ),
+    SPELL(
+            "spell", 13, -1
+    ),
     /**
      * A particle effect which is displayed when instant splash potions hit something:
      * <ul>
@@ -162,7 +190,9 @@ public enum ParticleEffect
      * <li>Only the motion on the y-axis can be controlled, the motion on the x- and z-axis are multiplied by 0.1 when setting the values to 0
      * </ul>
      */
-    SPELL_INSTANT( "instantSpell", 14, -1 ),
+    SPELL_INSTANT(
+            "instantSpell", 14, -1
+    ),
     /**
      * A particle effect which is displayed by entities with active potion effects:
      * <ul>
@@ -171,7 +201,9 @@ public enum ParticleEffect
      * <li>The particle color gets lighter when increasing the speed and darker when decreasing the speed
      * </ul>
      */
-    SPELL_MOB( "mobSpell", 15, -1, ParticleProperty.COLORABLE ),
+    SPELL_MOB(
+            "mobSpell", 15, -1, ParticleProperty.COLORABLE
+    ),
     /**
      * A particle effect which is displayed by entities with active potion effects applied through a beacon:
      * <ul>
@@ -180,7 +212,9 @@ public enum ParticleEffect
      * <li>The particle color gets lighter when increasing the speed and darker when decreasing the speed
      * </ul>
      */
-    SPELL_MOB_AMBIENT( "mobSpellAmbient", 16, -1, ParticleProperty.COLORABLE ),
+    SPELL_MOB_AMBIENT(
+            "mobSpellAmbient", 16, -1, ParticleProperty.COLORABLE
+    ),
     /**
      * A particle effect which is displayed by witches:
      * <ul>
@@ -189,7 +223,9 @@ public enum ParticleEffect
      * <li>Only the motion on the y-axis can be controlled, the motion on the x- and z-axis are multiplied by 0.1 when setting the values to 0
      * </ul>
      */
-    SPELL_WITCH( "witchMagic", 17, -1 ),
+    SPELL_WITCH(
+            "witchMagic", 17, -1
+    ),
     /**
      * A particle effect which is displayed by blocks beneath a water source:
      * <ul>
@@ -197,7 +233,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    DRIP_WATER( "dripWater", 18, -1 ),
+    DRIP_WATER(
+            "dripWater", 18, -1
+    ),
     /**
      * A particle effect which is displayed by blocks beneath a lava source:
      * <ul>
@@ -205,7 +243,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    DRIP_LAVA( "dripLava", 19, -1 ),
+    DRIP_LAVA(
+            "dripLava", 19, -1
+    ),
     /**
      * A particle effect which is displayed when attacking a villager in a village:
      * <ul>
@@ -213,7 +253,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    VILLAGER_ANGRY( "angryVillager", 20, -1 ),
+    VILLAGER_ANGRY(
+            "angryVillager", 20, -1
+    ),
     /**
      * A particle effect which is displayed when using bone meal and trading with a villager in a village:
      * <ul>
@@ -221,7 +263,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    VILLAGER_HAPPY( "happyVillager", 21, -1, ParticleProperty.DIRECTIONAL ),
+    VILLAGER_HAPPY(
+            "happyVillager", 21, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by mycelium:
      * <ul>
@@ -229,7 +273,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    TOWN_AURA( "townaura", 22, -1, ParticleProperty.DIRECTIONAL ),
+    TOWN_AURA(
+            "townaura", 22, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by note blocks:
      * <ul>
@@ -237,7 +283,9 @@ public enum ParticleEffect
      * <li>The speed value causes the particle to be colored green when set to 0
      * </ul>
      */
-    NOTE( "note", 23, -1, ParticleProperty.COLORABLE ),
+    NOTE(
+            "note", 23, -1, ParticleProperty.COLORABLE
+    ),
     /**
      * A particle effect which is displayed by nether portals, endermen, ender pearls, eyes of ender, ender chests and dragon eggs:
      * <ul>
@@ -245,7 +293,9 @@ public enum ParticleEffect
      * <li>The speed value influences the spread of this particle effect
      * </ul>
      */
-    PORTAL( "portal", 24, -1, ParticleProperty.DIRECTIONAL ),
+    PORTAL(
+            "portal", 24, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by enchantment tables which are nearby bookshelves:
      * <ul>
@@ -253,7 +303,9 @@ public enum ParticleEffect
      * <li>The speed value influences the spread of this particle effect
      * </ul>
      */
-    ENCHANTMENT_TABLE( "enchantmenttable", 25, -1, ParticleProperty.DIRECTIONAL ),
+    ENCHANTMENT_TABLE(
+            "enchantmenttable", 25, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by torches, active furnaces, magma cubes and monster spawners:
      * <ul>
@@ -261,7 +313,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    FLAME( "flame", 26, -1, ParticleProperty.DIRECTIONAL ),
+    FLAME(
+            "flame", 26, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by lava:
      * <ul>
@@ -269,7 +323,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    LAVA( "lava", 27, -1 ),
+    LAVA(
+            "lava", 27, -1
+    ),
     /**
      * A particle effect which is currently unused:
      * <ul>
@@ -277,7 +333,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    FOOTSTEP( "footstep", 28, -1 ),
+    FOOTSTEP(
+            "footstep", 28, -1
+    ),
     /**
      * A particle effect which is displayed when a mob dies:
      * <ul>
@@ -285,7 +343,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    CLOUD( "cloud", 29, -1, ParticleProperty.DIRECTIONAL ),
+    CLOUD(
+            "cloud", 29, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by redstone ore, powered redstone, redstone torches and redstone repeaters:
      * <ul>
@@ -293,7 +353,9 @@ public enum ParticleEffect
      * <li>The speed value causes the particle to be colored red when set to 0
      * </ul>
      */
-    REDSTONE( "reddust", 30, -1, ParticleProperty.COLORABLE ),
+    REDSTONE(
+            "reddust", 30, -1, ParticleProperty.COLORABLE
+    ),
     /**
      * A particle effect which is displayed when snowballs hit a block:
      * <ul>
@@ -301,7 +363,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    SNOWBALL( "snowballpoof", 31, -1 ),
+    SNOWBALL(
+            "snowballpoof", 31, -1
+    ),
     /**
      * A particle effect which is currently unused:
      * <ul>
@@ -309,7 +373,9 @@ public enum ParticleEffect
      * <li>The speed value influences the velocity at which the particle flies off
      * </ul>
      */
-    SNOW_SHOVEL( "snowshovel", 32, -1, ParticleProperty.DIRECTIONAL ),
+    SNOW_SHOVEL(
+            "snowshovel", 32, -1, ParticleProperty.DIRECTIONAL
+    ),
     /**
      * A particle effect which is displayed by slimes:
      * <ul>
@@ -317,7 +383,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    SLIME( "slime", 33, -1 ),
+    SLIME(
+            "slime", 33, -1
+    ),
     /**
      * A particle effect which is displayed when breeding and taming animals:
      * <ul>
@@ -325,7 +393,9 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    HEART( "heart", 34, -1 ),
+    HEART(
+            "heart", 34, -1
+    ),
     /**
      * A particle effect which is displayed by barriers:
      * <ul>
@@ -333,14 +403,18 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    BARRIER( "barrier", 35, 8 ),
+    BARRIER(
+            "barrier", 35, 8
+    ),
     /**
      * A particle effect which is displayed when breaking a tool or eggs hit a block:
      * <ul>
      * <li>It looks like a little piece with an item texture
      * </ul>
      */
-    ITEM_CRACK( "iconcrack", 36, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA ),
+    ITEM_CRACK(
+            "iconcrack", 36, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA
+    ),
     /**
      * A particle effect which is displayed when breaking blocks or sprinting:
      * <ul>
@@ -348,14 +422,18 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    BLOCK_CRACK( "blockcrack", 37, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA ),
+    BLOCK_CRACK(
+            "blockcrack", 37, -1, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA
+    ),
     /**
      * A particle effect which is displayed when falling:
      * <ul>
      * <li>It looks like a little piece with a block texture
      * </ul>
      */
-    BLOCK_DUST( "blockdust", 38, 7, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA ),
+    BLOCK_DUST(
+            "blockdust", 38, 7, ParticleProperty.DIRECTIONAL, ParticleProperty.REQUIRES_DATA
+    ),
     /**
      * A particle effect which is displayed when rain hits the ground:
      * <ul>
@@ -363,14 +441,18 @@ public enum ParticleEffect
      * <li>The speed value has no influence on this particle effect
      * </ul>
      */
-    WATER_DROP( "droplet", 39, 8 ),
+    WATER_DROP(
+            "droplet", 39, 8
+    ),
     /**
      * A particle effect which is currently unused:
      * <ul>
      * <li>It has no visual effect
      * </ul>
      */
-    ITEM_TAKE( "take", 40, 8 ),
+    ITEM_TAKE(
+            "take", 40, 8
+    ),
     /**
      * A particle effect which is displayed by elder guardians:
      * <ul>
@@ -379,7 +461,9 @@ public enum ParticleEffect
      * <li>The offset values have no influence on this particle effect
      * </ul>
      */
-    MOB_APPEARANCE( "mobappearance", 41, 8 );
+    MOB_APPEARANCE(
+            "mobappearance", 41, 8
+    );
 
     private static final Map< String, ParticleEffect >  NAME_MAP = new HashMap< String, ParticleEffect >();
     private static final Map< Integer, ParticleEffect > ID_MAP   = new HashMap< Integer, ParticleEffect >();
@@ -389,8 +473,12 @@ public enum ParticleEffect
     {
         for ( ParticleEffect effect : values() )
         {
-            NAME_MAP.put( effect.name, effect );
-            ID_MAP.put( effect.id, effect );
+            NAME_MAP.put(
+                    effect.name, effect
+            );
+            ID_MAP.put(
+                    effect.id, effect
+            );
         }
     }
 
@@ -477,7 +565,8 @@ public enum ParticleEffect
         for ( Player player : players )
         {
             Location playerLocation = player.getLocation();
-            if ( !world.equals( playerLocation.getWorld().getName() ) || playerLocation.distanceSquared( location ) < 65536 )
+            if ( !world.equals( playerLocation.getWorld().getName() ) ||
+                    playerLocation.distanceSquared( location ) < 65536 )
             {
                 continue;
             }
@@ -495,7 +584,13 @@ public enum ParticleEffect
      */
     private static boolean isDataCorrect( ParticleEffect effect, ParticleData data )
     {
-        return ( ( effect == BLOCK_CRACK || effect == BLOCK_DUST ) && data instanceof BlockData ) || ( effect == ITEM_CRACK && data instanceof ItemData );
+        return (
+                (
+                        effect == BLOCK_CRACK || effect == BLOCK_DUST
+                ) && data instanceof BlockData
+        ) || (
+                effect == ITEM_CRACK && data instanceof ItemData
+        );
     }
 
     /**
@@ -507,7 +602,15 @@ public enum ParticleEffect
      */
     private static boolean isColorCorrect( ParticleEffect effect, ParticleColor color )
     {
-        return ( ( effect == SPELL_MOB || effect == SPELL_MOB_AMBIENT || effect == REDSTONE ) && color instanceof OrdinaryColor ) || ( effect == NOTE && color instanceof NoteColor );
+        return (
+                (
+                        effect == SPELL_MOB ||
+                                effect == SPELL_MOB_AMBIENT ||
+                                effect == REDSTONE
+                ) && color instanceof OrdinaryColor
+        ) || (
+                effect == NOTE && color instanceof NoteColor
+        );
     }
 
     /**
@@ -594,7 +697,11 @@ public enum ParticleEffect
         {
             throw new IllegalArgumentException( "There is no water at the center location" );
         }
-        new ParticlePacket( this, offsetX, offsetY, offsetZ, speed, amount, range > 256, null ).sendTo( center, range );
+        new ParticlePacket(
+                this, offsetX, offsetY, offsetZ, speed, amount, range > 256, null
+        ).sendTo(
+                center, range
+        );
     }
 
     /**
@@ -627,7 +734,13 @@ public enum ParticleEffect
         {
             throw new IllegalArgumentException( "There is no water at the center location" );
         }
-        new ParticlePacket( this, offsetX, offsetY, offsetZ, speed, amount, isLongDistance( center, players ), null ).sendTo( center, players );
+        new ParticlePacket(
+                this, offsetX, offsetY, offsetZ, speed, amount, isLongDistance(
+                center, players
+        ), null
+        ).sendTo(
+                center, players
+        );
     }
 
     /**
@@ -647,7 +760,9 @@ public enum ParticleEffect
      */
     public void display( float offsetX, float offsetY, float offsetZ, float speed, int amount, Location center, Player... players ) throws ParticleVersionException, ParticleDataException, IllegalArgumentException
     {
-        display( offsetX, offsetY, offsetZ, speed, amount, center, Arrays.asList( players ) );
+        display(
+                offsetX, offsetY, offsetZ, speed, amount, center, Arrays.asList( players )
+        );
     }
 
     /**
@@ -681,7 +796,11 @@ public enum ParticleEffect
         {
             throw new IllegalArgumentException( "There is no water at the center location" );
         }
-        new ParticlePacket( this, direction, speed, range > 256, null ).sendTo( center, range );
+        new ParticlePacket(
+                this, direction, speed, range > 256, null
+        ).sendTo(
+                center, range
+        );
     }
 
     /**
@@ -715,7 +834,13 @@ public enum ParticleEffect
         {
             throw new IllegalArgumentException( "There is no water at the center location" );
         }
-        new ParticlePacket( this, direction, speed, isLongDistance( center, players ), null ).sendTo( center, players );
+        new ParticlePacket(
+                this, direction, speed, isLongDistance(
+                center, players
+        ), null
+        ).sendTo(
+                center, players
+        );
     }
 
     /**
@@ -732,7 +857,9 @@ public enum ParticleEffect
      */
     public void display( Vector direction, float speed, Location center, Player... players ) throws ParticleVersionException, ParticleDataException, IllegalArgumentException
     {
-        display( direction, speed, center, Arrays.asList( players ) );
+        display(
+                direction, speed, center, Arrays.asList( players )
+        );
     }
 
     /**
@@ -756,11 +883,17 @@ public enum ParticleEffect
         {
             throw new ParticleColorException( "This particle effect is not colorable" );
         }
-        if ( !isColorCorrect( this, color ) )
+        if ( !isColorCorrect(
+                this, color
+        ) )
         {
             throw new ParticleColorException( "The particle color type is incorrect" );
         }
-        new ParticlePacket( this, color, range > 256 ).sendTo( center, range );
+        new ParticlePacket(
+                this, color, range > 256
+        ).sendTo(
+                center, range
+        );
     }
 
     /**
@@ -784,11 +917,19 @@ public enum ParticleEffect
         {
             throw new ParticleColorException( "This particle effect is not colorable" );
         }
-        if ( !isColorCorrect( this, color ) )
+        if ( !isColorCorrect(
+                this, color
+        ) )
         {
             throw new ParticleColorException( "The particle color type is incorrect" );
         }
-        new ParticlePacket( this, color, isLongDistance( center, players ) ).sendTo( center, players );
+        new ParticlePacket(
+                this, color, isLongDistance(
+                center, players
+        )
+        ).sendTo(
+                center, players
+        );
     }
 
     /**
@@ -803,7 +944,9 @@ public enum ParticleEffect
      */
     public void display( ParticleColor color, Location center, Player... players ) throws ParticleVersionException, ParticleColorException
     {
-        display( color, center, Arrays.asList( players ) );
+        display(
+                color, center, Arrays.asList( players )
+        );
     }
 
     /**
@@ -832,11 +975,17 @@ public enum ParticleEffect
         {
             throw new ParticleDataException( "This particle effect does not require additional data" );
         }
-        if ( !isDataCorrect( this, data ) )
+        if ( !isDataCorrect(
+                this, data
+        ) )
         {
             throw new ParticleDataException( "The particle data type is incorrect" );
         }
-        new ParticlePacket( this, offsetX, offsetY, offsetZ, speed, amount, range > 256, data ).sendTo( center, range );
+        new ParticlePacket(
+                this, offsetX, offsetY, offsetZ, speed, amount, range > 256, data
+        ).sendTo(
+                center, range
+        );
     }
 
     /**
@@ -865,11 +1014,19 @@ public enum ParticleEffect
         {
             throw new ParticleDataException( "This particle effect does not require additional data" );
         }
-        if ( !isDataCorrect( this, data ) )
+        if ( !isDataCorrect(
+                this, data
+        ) )
         {
             throw new ParticleDataException( "The particle data type is incorrect" );
         }
-        new ParticlePacket( this, offsetX, offsetY, offsetZ, speed, amount, isLongDistance( center, players ), data ).sendTo( center, players );
+        new ParticlePacket(
+                this, offsetX, offsetY, offsetZ, speed, amount, isLongDistance(
+                center, players
+        ), data
+        ).sendTo(
+                center, players
+        );
     }
 
     /**
@@ -889,7 +1046,9 @@ public enum ParticleEffect
      */
     public void display( ParticleData data, float offsetX, float offsetY, float offsetZ, float speed, int amount, Location center, Player... players ) throws ParticleVersionException, ParticleDataException
     {
-        display( data, offsetX, offsetY, offsetZ, speed, amount, center, Arrays.asList( players ) );
+        display(
+                data, offsetX, offsetY, offsetZ, speed, amount, center, Arrays.asList( players )
+        );
     }
 
     /**
@@ -915,11 +1074,17 @@ public enum ParticleEffect
         {
             throw new ParticleDataException( "This particle effect does not require additional data" );
         }
-        if ( !isDataCorrect( this, data ) )
+        if ( !isDataCorrect(
+                this, data
+        ) )
         {
             throw new ParticleDataException( "The particle data type is incorrect" );
         }
-        new ParticlePacket( this, direction, speed, range > 256, data ).sendTo( center, range );
+        new ParticlePacket(
+                this, direction, speed, range > 256, data
+        ).sendTo(
+                center, range
+        );
     }
 
     /**
@@ -945,11 +1110,19 @@ public enum ParticleEffect
         {
             throw new ParticleDataException( "This particle effect does not require additional data" );
         }
-        if ( !isDataCorrect( this, data ) )
+        if ( !isDataCorrect(
+                this, data
+        ) )
         {
             throw new ParticleDataException( "The particle data type is incorrect" );
         }
-        new ParticlePacket( this, direction, speed, isLongDistance( center, players ), data ).sendTo( center, players );
+        new ParticlePacket(
+                this, direction, speed, isLongDistance(
+                center, players
+        ), data
+        ).sendTo(
+                center, players
+        );
     }
 
     /**
@@ -966,7 +1139,9 @@ public enum ParticleEffect
      */
     public void display( ParticleData data, Vector direction, float speed, Location center, Player... players ) throws ParticleVersionException, ParticleDataException
     {
-        display( data, direction, speed, center, Arrays.asList( players ) );
+        display(
+                data, direction, speed, center, Arrays.asList( players )
+        );
     }
 
     /**
@@ -1022,7 +1197,9 @@ public enum ParticleEffect
         {
             this.material = material;
             this.data = data;
-            this.packetData = new int[]{ material.getId(), data };
+            this.packetData = new int[]{
+                    material.getId(), data
+            };
         }
 
         /**
@@ -1062,7 +1239,10 @@ public enum ParticleEffect
          */
         public String getPacketDataString()
         {
-            return "_" + packetData[ 0 ] + "_" + packetData[ 1 ];
+            return "_" +
+                    packetData[ 0 ] +
+                    "_" +
+                    packetData[ 1 ];
         }
     }
 
@@ -1085,7 +1265,9 @@ public enum ParticleEffect
          */
         public ItemData( Material material, byte data )
         {
-            super( material, data );
+            super(
+                    material, data
+            );
         }
     }
 
@@ -1109,7 +1291,9 @@ public enum ParticleEffect
          */
         public BlockData( Material material, byte data ) throws IllegalArgumentException
         {
-            super( material, data );
+            super(
+                    material, data
+            );
             if ( !material.isBlock() )
             {
                 throw new IllegalArgumentException( "The material is not a block" );
@@ -1475,7 +1659,16 @@ public enum ParticleEffect
          */
         public ParticlePacket( ParticleEffect effect, Vector direction, float speed, boolean longDistance, ParticleData data ) throws IllegalArgumentException
         {
-            this( effect, ( float ) direction.getX(), ( float ) direction.getY(), ( float ) direction.getZ(), speed, 0, longDistance, data );
+            this(
+                    effect,
+                    ( float ) direction.getX(),
+                    ( float ) direction.getY(),
+                    ( float ) direction.getZ(),
+                    speed,
+                    0,
+                    longDistance,
+                    data
+            );
         }
 
         /**
@@ -1487,7 +1680,9 @@ public enum ParticleEffect
          */
         public ParticlePacket( ParticleEffect effect, ParticleColor color, boolean longDistance )
         {
-            this( effect, color.getValueX(), color.getValueY(), color.getValueZ(), 1, 0, longDistance, null );
+            this(
+                    effect, color.getValueX(), color.getValueY(), color.getValueZ(), 1, 0, longDistance, null
+            );
         }
 
         /**
@@ -1510,14 +1705,26 @@ public enum ParticleEffect
                 {
                     enumParticle = ReflectionUtils.PackageType.MINECRAFT_SERVER.getClass( "EnumParticle" );
                 }
-                Class< ? > packetClass = ReflectionUtils.PackageType.MINECRAFT_SERVER.getClass( version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles" );
+                Class< ? > packetClass = ReflectionUtils.PackageType.MINECRAFT_SERVER.getClass(
+                        version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles"
+                );
                 packetConstructor = ReflectionUtils.getConstructor( packetClass );
-                getHandle = ReflectionUtils.getMethod( "CraftPlayer", ReflectionUtils.PackageType.CRAFTBUKKIT_ENTITY, "getHandle" );
-                playerConnection = ReflectionUtils.getField( "EntityPlayer", ReflectionUtils.PackageType.MINECRAFT_SERVER, false, "playerConnection" );
-                sendPacket = ReflectionUtils.getMethod( playerConnection.getType(), "sendPacket", ReflectionUtils.PackageType.MINECRAFT_SERVER.getClass( "Packet" ) );
+                getHandle = ReflectionUtils.getMethod(
+                        "CraftPlayer", ReflectionUtils.PackageType.CRAFTBUKKIT_ENTITY, "getHandle"
+                );
+                playerConnection = ReflectionUtils.getField(
+                        "EntityPlayer", ReflectionUtils.PackageType.MINECRAFT_SERVER, false, "playerConnection"
+                );
+                sendPacket = ReflectionUtils.getMethod(
+                        playerConnection.getType(),
+                        "sendPacket",
+                        ReflectionUtils.PackageType.MINECRAFT_SERVER.getClass( "Packet" )
+                );
             } catch ( Exception exception )
             {
-                throw new VersionIncompatibleException( "Your current bukkit version seems to be incompatible with this library", exception );
+                throw new VersionIncompatibleException(
+                        "Your current bukkit version seems to be incompatible with this library", exception
+                );
             }
             initialized = true;
         }
@@ -1569,27 +1776,53 @@ public enum ParticleEffect
                     {
                         name += data.getPacketDataString();
                     }
-                    ReflectionUtils.setValue( packet, true, "a", name );
+                    ReflectionUtils.setValue(
+                            packet, true, "a", name
+                    );
                 } else
                 {
-                    ReflectionUtils.setValue( packet, true, "a", enumParticle.getEnumConstants()[ effect.getId() ] );
-                    ReflectionUtils.setValue( packet, true, "j", longDistance );
+                    ReflectionUtils.setValue(
+                            packet, true, "a", enumParticle.getEnumConstants()[ effect.getId() ]
+                    );
+                    ReflectionUtils.setValue(
+                            packet, true, "j", longDistance
+                    );
                     if ( data != null )
                     {
-                        ReflectionUtils.setValue( packet, true, "k", data.getPacketData() );
+                        ReflectionUtils.setValue(
+                                packet, true, "k", data.getPacketData()
+                        );
                     }
                 }
-                ReflectionUtils.setValue( packet, true, "b", ( float ) center.getX() );
-                ReflectionUtils.setValue( packet, true, "c", ( float ) center.getY() );
-                ReflectionUtils.setValue( packet, true, "d", ( float ) center.getZ() );
-                ReflectionUtils.setValue( packet, true, "e", offsetX );
-                ReflectionUtils.setValue( packet, true, "f", offsetY );
-                ReflectionUtils.setValue( packet, true, "g", offsetZ );
-                ReflectionUtils.setValue( packet, true, "h", speed );
-                ReflectionUtils.setValue( packet, true, "i", amount );
+                ReflectionUtils.setValue(
+                        packet, true, "b", ( float ) center.getX()
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "c", ( float ) center.getY()
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "d", ( float ) center.getZ()
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "e", offsetX
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "f", offsetY
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "g", offsetZ
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "h", speed
+                );
+                ReflectionUtils.setValue(
+                        packet, true, "i", amount
+                );
             } catch ( Exception exception )
             {
-                throw new PacketInstantiationException( "Packet instantiation failed", exception );
+                throw new PacketInstantiationException(
+                        "Packet instantiation failed", exception
+                );
             }
         }
 
@@ -1607,10 +1840,16 @@ public enum ParticleEffect
             initializePacket( center );
             try
             {
-                sendPacket.invoke( playerConnection.get( getHandle.invoke( player ) ), packet );
+                sendPacket.invoke(
+                        playerConnection.get( getHandle.invoke( player ) ), packet
+                );
             } catch ( Exception exception )
             {
-                throw new PacketSendingException( "Failed to send the packet to player '" + player.getName() + "'", exception );
+                throw new PacketSendingException(
+                        "Failed to send the packet to player '" +
+                                player.getName() +
+                                "'", exception
+                );
             }
         }
 
@@ -1630,7 +1869,9 @@ public enum ParticleEffect
             }
             for ( Player player : players )
             {
-                sendTo( center, player );
+                sendTo(
+                        center, player
+                );
             }
         }
 
@@ -1653,11 +1894,14 @@ public enum ParticleEffect
             double squared   = range * range;
             for ( Player player : Bukkit.getOnlinePlayers() )
             {
-                if ( !player.getWorld().getName().equals( worldName ) || player.getLocation().distanceSquared( center ) > squared )
+                if ( !player.getWorld().getName().equals( worldName ) ||
+                        player.getLocation().distanceSquared( center ) > squared )
                 {
                     continue;
                 }
-                sendTo( center, player );
+                sendTo(
+                        center, player
+                );
             }
         }
 
@@ -1681,7 +1925,9 @@ public enum ParticleEffect
              */
             public VersionIncompatibleException( String message, Throwable cause )
             {
-                super( message, cause );
+                super(
+                        message, cause
+                );
             }
         }
 
@@ -1705,7 +1951,9 @@ public enum ParticleEffect
              */
             public PacketInstantiationException( String message, Throwable cause )
             {
-                super( message, cause );
+                super(
+                        message, cause
+                );
             }
         }
 
@@ -1729,7 +1977,9 @@ public enum ParticleEffect
              */
             public PacketSendingException( String message, Throwable cause )
             {
-                super( message, cause );
+                super(
+                        message, cause
+                );
             }
         }
     }

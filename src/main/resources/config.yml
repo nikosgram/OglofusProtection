@@ -1,0 +1,8 @@
+database:
+    port: 3306
+    #If you using sqlite, change this to file path
+    host: "./plugins/OglofusPVP/database.sql"
+    user: root
+    pass: password
+    data: database
+    type: sqlite

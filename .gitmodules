@@ -1,3 +1,6 @@
+[submodule "OglofusProtectionApi"]
+	path = OglofusProtectionApi
+	url = https://github.com/nikosgram13/OglofusProtectionApi
 [submodule "OglofusCommons"]
 	path = OglofusCommons
 	url = https://github.com/nikosgram13/OglofusCommons
