@@ -100,17 +100,16 @@ public class OglofusProtectionVector implements ProtectionVector
         List< T > returned = new ArrayList< T >();
         if ( OglofusUtils.equalClass( tClass, Entity.class ) )
         {
-            for ( Location location : getBlocks( Location.class ) )
+            for ( Entity entity : bukkit.getServer().getWorld( blockLocation.getWorld() ).getEntities() )
             {
-                int locationSquare = location.getBlockX() + location.getBlockY() + location.getBlockZ();
-                for ( Entity entity : location.getChunk().getEntities() )
+                if ( Math.abs( blockLocation.getX() - entity.getLocation().getX() ) <= radius )
                 {
-                    int entitySquare = entity.getLocation().getBlockX() +
-                            entity.getLocation().getBlockY() +
-                            entity.getLocation().getBlockZ();
-                    if ( locationSquare == entitySquare )
+                    if ( Math.abs( blockLocation.getY() - entity.getLocation().getY() ) <= radius )
                     {
-                        returned.add( ( T ) entity );
+                        if ( Math.abs( blockLocation.getZ() - entity.getLocation().getZ() ) <= radius )
+                        {
+                            returned.add( ( T ) entity );
+                        }
                     }
                 }
             }

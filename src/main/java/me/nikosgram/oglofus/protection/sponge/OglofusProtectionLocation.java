@@ -16,6 +16,7 @@
 
 package me.nikosgram.oglofus.protection.sponge;
 
+import com.google.common.base.Optional;
 import lombok.Getter;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
 
@@ -67,14 +68,14 @@ public class OglofusProtectionLocation implements ProtectionLocation
     }
 
     @Override
-    public < T > T getWorldAs( Class< T > tClass )
+    public < T > Optional< T > getWorldAs( Class< T > tClass )
     {
-        return null;
+        return Optional.absent();
     }
 
     @Override
-    public < T > T getLocationAs( Class< T > tClass )
+    public < T > Optional< T > getLocationAs( Class< T > tClass )
     {
-        return null;
+        return Optional.absent();
     }
 }

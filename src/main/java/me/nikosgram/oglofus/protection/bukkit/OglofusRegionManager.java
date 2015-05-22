@@ -16,13 +16,17 @@
 
 package me.nikosgram.oglofus.protection.bukkit;
 
+import com.google.common.base.Optional;
 import me.nikosgram.oglofus.protection.api.action.ActionResponse;
 import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
 import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
 import me.nikosgram.oglofus.protection.api.region.ProtectionVector;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class OglofusRegionManager implements RegionManager
 {
@@ -72,7 +76,7 @@ public class OglofusRegionManager implements RegionManager
         {
             return Optional.of( map.get( target ) );
         }
-        return Optional.empty();
+        return Optional.absent();
     }
 
     @Override
@@ -92,7 +96,7 @@ public class OglofusRegionManager implements RegionManager
                 return Optional.of( region );
             }
         }
-        return Optional.empty();
+        return Optional.absent();
     }
 
     @Override
@@ -116,7 +120,7 @@ public class OglofusRegionManager implements RegionManager
                 }
             }
         }
-        return Optional.empty();
+        return Optional.absent();
     }
 
     @Override

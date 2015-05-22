@@ -32,9 +32,9 @@ import java.util.UUID;
 
 public class OglofusProtectionVector implements ProtectionVector
 {
-    private final OglofusSponge sponge;
+    private final OglofusSponge      sponge;
     @Getter
-    private final int radius;
+    private final int                radius;
     @Getter
     private final ProtectionLocation blockLocation;
     @Getter
@@ -46,10 +46,7 @@ public class OglofusProtectionVector implements ProtectionVector
     {
         this.sponge = sponge;
         this.radius = ( int ) sponge.getConnector().getObject(
-                "oglofus_vectors",
-                "uuid",
-                uuid.toString(),
-                "radius"
+                "oglofus_vectors", "uuid", uuid.toString(), "radius"
         ).get();
         this.blockLocation = new OglofusProtectionLocation(
                 sponge,
@@ -106,17 +103,16 @@ public class OglofusProtectionVector implements ProtectionVector
         List< T > returned = new ArrayList< T >();
         if ( OglofusUtils.equalClass( tClass, Entity.class ) )
         {
-            for ( Location location : getBlocks( Location.class ) )
+            for ( Entity entity : sponge.getGame().getServer().getWorld( blockLocation.getWorld() ).get().getEntities() )
             {
-                int locationSquare = location.getBlockX() + location.getBlockY() + location.getBlockZ();
-                for ( Entity entity : location.getExtent().getEntities() )
+                if ( Math.abs( blockLocation.getX() - entity.getLocation().getX() ) <= radius )
                 {
-                    int entitySquare = entity.getLocation().getBlockX() +
-                            entity.getLocation().getBlockY() +
-                            entity.getLocation().getBlockZ();
-                    if ( locationSquare == entitySquare )
+                    if ( Math.abs( blockLocation.getY() - entity.getLocation().getY() ) <= radius )
                     {
-                        returned.add( ( T ) entity );
+                        if ( Math.abs( blockLocation.getZ() - entity.getLocation().getZ() ) <= radius )
+                        {
+                            returned.add( ( T ) entity );
+                        }
                     }
                 }
             }
