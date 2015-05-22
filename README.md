@@ -1,6 +1,6 @@
 # OglofusProtection [![Build Status](https://api.travis-ci.org/nikosgram13/OglofusProtection.svg?branch=master)](https://travis-ci.org/nikosgram13/OglofusProtection)
 
-OglofusProtection allows a player to place a special block, and this protects their area from griefing! (SpigotPlugin)
+OglofusProtection allows a player to place a special block, and this protects their area from griefing! (Spigot & Sponge API)
 
 ## Prerequisites
 * [Java] 7
