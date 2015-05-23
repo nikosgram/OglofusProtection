@@ -78,4 +78,41 @@ public class OglofusProtectionLocation implements ProtectionLocation
     {
         return Optional.absent();
     }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+
+        OglofusProtectionLocation that = ( OglofusProtectionLocation ) o;
+
+        if ( x != that.x ) return false;
+        if ( y != that.y ) return false;
+        if ( z != that.z ) return false;
+        if ( sponge != null ? !sponge.equals( that.sponge ) : that.sponge != null ) return false;
+        return !( world != null ? !world.equals( that.world ) : that.world != null );
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = sponge != null ? sponge.hashCode() : 0;
+        result = 31 * result + ( world != null ? world.hashCode() : 0 );
+        result = 31 * result + x;
+        result = 31 * result + y;
+        result = 31 * result + z;
+        return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ProtectionLocation{" +
+                ", world=" + world +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

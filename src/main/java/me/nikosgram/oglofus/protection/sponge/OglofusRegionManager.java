@@ -81,18 +81,13 @@ public class OglofusRegionManager implements RegionManager
     @Override
     public Optional< ProtectionRegion > getRegion( String target )
     {
-        for ( ProtectionRegion region : getRegions() )
+        String uid;
+        if ( ( uid = sponge.getConnector().getString( "oglofus_regions", "name", target, "uuid" ).orNull() ) != null )
         {
-            if ( region.getName().equalsIgnoreCase( target ) )
+            UUID uuid = UUID.fromString( uid );
+            if ( map.containsKey( uuid ) )
             {
-                return Optional.of( region );
-            }
-        }
-        for ( ProtectionRegion region : getRegions() )
-        {
-            if ( region.getName().toLowerCase().startsWith( target.toLowerCase() ) )
-            {
-                return Optional.of( region );
+                return Optional.of( map.get( uuid ) );
             }
         }
         return Optional.absent();
@@ -101,6 +96,24 @@ public class OglofusRegionManager implements RegionManager
     @Override
     public Optional< ProtectionRegion > getRegion( ProtectionLocation location )
     {
+        String uid;
+        if ( (
+                uid = sponge.getConnector().getString(
+                        "select uuid from oglofus_vectors where x=" +
+                                location.getX() +
+                                " and y=" +
+                                location.getY() +
+                                " and z=" +
+                                location.getZ(), "uuid"
+                ).orNull()
+        ) != null )
+        {
+            UUID uuid = UUID.fromString( uid );
+            if ( map.containsKey( uuid ) )
+            {
+                return Optional.of( map.get( uuid ) );
+            }
+        }
         for ( ProtectionRegion region : getRegions() )
         {
             ProtectionVector vector = region.getProtectionVector();

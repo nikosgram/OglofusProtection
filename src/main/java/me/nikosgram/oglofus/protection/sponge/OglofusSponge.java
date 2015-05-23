@@ -25,15 +25,21 @@ import me.nikosgram.oglofus.protection.api.OglofusProtection;
 import me.nikosgram.oglofus.protection.api.manager.InvitationManager;
 import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.plugin.ProtectionPlugin;
+import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
+import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
+import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
+import org.spongepowered.api.world.World;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,6 +129,8 @@ public class OglofusSponge implements ProtectionPlugin
             );
         }
 
+        connector.openConnection();
+
         if ( connector.checkConnection() )
         {
             regionManager = new OglofusRegionManager( this );
@@ -133,5 +141,92 @@ public class OglofusSponge implements ProtectionPlugin
     public InvitationManager getInvitationManager()
     {
         return null;
+    }
+
+    @Subscribe
+    public void security( PlayerInteractBlockEvent event )
+    {
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                ( ( World ) event.getBlock().getExtent() ).getUniqueId(),
+                event.getBlock().getBlockX(),
+                event.getBlock().getBlockY(),
+                event.getBlock().getBlockZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getEntity().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getEntity().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void security( PlayerPlaceBlockEvent event )
+    {
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                ( ( World ) event.getBlock().getExtent() ).getUniqueId(),
+                event.getBlock().getBlockX(),
+                event.getBlock().getBlockY(),
+                event.getBlock().getBlockZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getEntity().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getEntity().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void security( PlayerBreakBlockEvent event )
+    {
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                ( ( World ) event.getBlock().getExtent() ).getUniqueId(),
+                event.getBlock().getBlockX(),
+                event.getBlock().getBlockY(),
+                event.getBlock().getBlockZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getEntity().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getEntity().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
     }
 }

@@ -24,11 +24,19 @@ import me.nikosgram.oglofus.protection.api.OglofusProtection;
 import me.nikosgram.oglofus.protection.api.manager.InvitationManager;
 import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.plugin.ProtectionPlugin;
+import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
+import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Paths;
 
-public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin
+public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Listener
 {
     @Getter
     private DatabaseConnector connector;
@@ -71,6 +79,8 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin
             );
         }
 
+        connector.openConnection();
+
         if ( connector.checkConnection() )
         {
             regionManager = new OglofusRegionManager( this );
@@ -80,7 +90,7 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin
     @Override
     public void onEnable()
     {
-        super.onEnable();
+        getServer().getPluginManager().registerEvents( this, this );
     }
 
     @Override
@@ -93,5 +103,98 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin
     public InvitationManager getInvitationManager()
     {
         return null;
+    }
+
+    @EventHandler
+    public void security( PlayerInteractEvent event )
+    {
+        if ( event.getAction().equals( Action.PHYSICAL ) ||
+                event.getAction().equals( Action.RIGHT_CLICK_AIR ) ||
+                event.getAction().equals( Action.LEFT_CLICK_AIR ) )
+        {
+            return;
+        }
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                event.getClickedBlock().getWorld().getUID(),
+                event.getClickedBlock().getX(),
+                event.getClickedBlock().getY(),
+                event.getClickedBlock().getZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getPlayer().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getPlayer().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void security( BlockPlaceEvent event )
+    {
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                event.getBlock().getWorld().getUID(),
+                event.getBlock().getX(),
+                event.getBlock().getY(),
+                event.getBlock().getZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getPlayer().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getPlayer().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void security( BlockBreakEvent event )
+    {
+        ProtectionLocation location = new OglofusProtectionLocation(
+                this,
+                event.getBlock().getWorld().getUID(),
+                event.getBlock().getX(),
+                event.getBlock().getY(),
+                event.getBlock().getZ()
+        );
+        ProtectionRegion region;
+        if ( ( region = getRegionManager().getRegion( location ).orNull() ) != null )
+        {
+            if ( !region.getProtectionStaff().hasMemberAccess( event.getPlayer().getUniqueId() ) )
+            {
+                event.setCancelled( true );
+            } else
+            {
+                if ( region.getProtectionVector().getBlockLocation().equals( location ) )
+                {
+                    if ( !region.getProtectionStaff().hasOwnerAccess( event.getPlayer().getUniqueId() ) )
+                    {
+                        event.setCancelled( true );
+                    }
+                }
+            }
+        }
     }
 }
