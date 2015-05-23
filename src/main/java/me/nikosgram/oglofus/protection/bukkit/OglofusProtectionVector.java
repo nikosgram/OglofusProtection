@@ -42,6 +42,15 @@ public class OglofusProtectionVector implements ProtectionVector
     @Getter
     private final ProtectionLocation maxLocation;
 
+    public OglofusProtectionVector( OglofusBukkit bukkit, int radius, ProtectionLocation blockLocation )
+    {
+        this.bukkit = bukkit;
+        this.radius = radius;
+        this.blockLocation = blockLocation;
+        this.minLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add( -radius, -radius, -radius );
+        this.maxLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add( radius, radius, radius );
+    }
+
     protected OglofusProtectionVector( UUID uuid, OglofusBukkit bukkit )
     {
         this.bukkit = bukkit;

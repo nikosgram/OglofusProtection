@@ -18,20 +18,19 @@ package me.nikosgram.oglofus.protection.bukkit;
 
 import com.google.common.base.Optional;
 import me.nikosgram.oglofus.protection.api.action.ActionResponse;
+import me.nikosgram.oglofus.protection.api.handler.Handler;
 import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
 import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
 import me.nikosgram.oglofus.protection.api.region.ProtectionVector;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class OglofusRegionManager implements RegionManager
 {
     private final OglofusBukkit bukkit;
-    private final Map< UUID, ProtectionRegion > map = new HashMap< UUID, ProtectionRegion >();
+    private final Map< UUID, ProtectionRegion > map      = new HashMap< UUID, ProtectionRegion >();
+    private final List< Handler >               handlers = new ArrayList< Handler >();
 
     protected OglofusRegionManager( OglofusBukkit bukkit )
     {
@@ -152,5 +151,11 @@ public class OglofusRegionManager implements RegionManager
     public ActionResponse deleteProtectionArea( ProtectionRegion area, UUID owner )
     {
         return null;
+    }
+
+    @Override
+    public void registerHandler( Handler handler )
+    {
+        handlers.add( handler );
     }
 }

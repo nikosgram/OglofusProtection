@@ -24,6 +24,7 @@ import me.nikosgram.oglofus.utils.OglofusUtils;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +42,15 @@ public class OglofusProtectionVector implements ProtectionVector
     private final ProtectionLocation minLocation;
     @Getter
     private final ProtectionLocation maxLocation;
+
+    public OglofusProtectionVector( OglofusSponge sponge, int radius, ProtectionLocation blockLocation )
+    {
+        this.sponge = sponge;
+        this.radius = radius;
+        this.blockLocation = blockLocation;
+        this.minLocation = new OglofusProtectionLocation( sponge, getBlockLocation() ).add( -radius, -radius, -radius );
+        this.maxLocation = new OglofusProtectionLocation( sponge, getBlockLocation() ).add( radius, radius, radius );
+    }
 
     protected OglofusProtectionVector( UUID uuid, OglofusSponge sponge )
     {
@@ -74,10 +84,7 @@ public class OglofusProtectionVector implements ProtectionVector
                 for ( int location_z = minLocation.getZ(); location_z <= maxLocation.getZ(); location_z++ )
                 {
                     Location location = new Location(
-                            sponge.getGame().getServer().getWorld( blockLocation.getWorld() ).get(),
-                            location_x,
-                            location_y,
-                            location_z
+                            blockLocation.getWorldAs( World.class ).get(), location_x, location_y, location_z
                     );
                     if ( OglofusUtils.equalClass( tClass, Location.class ) )
                     {
@@ -103,7 +110,7 @@ public class OglofusProtectionVector implements ProtectionVector
         List< T > returned = new ArrayList< T >();
         if ( OglofusUtils.equalClass( tClass, Entity.class ) )
         {
-            for ( Entity entity : sponge.getGame().getServer().getWorld( blockLocation.getWorld() ).get().getEntities() )
+            for ( Entity entity : blockLocation.getWorldAs( World.class ).get().getEntities() )
             {
                 if ( Math.abs( blockLocation.getX() - entity.getLocation().getX() ) <= radius )
                 {

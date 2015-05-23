@@ -26,6 +26,7 @@ import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.plugin.ProtectionPlugin;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
 import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
+import me.nikosgram.oglofus.protection.bukkit.handler.WorldGuardHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -42,7 +43,8 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
     private DatabaseConnector connector;
     @Getter
     private RegionManager     regionManager;
-
+    @Getter
+    private InvitationManager invitationManager;
 
     public OglofusBukkit()
     {
@@ -90,19 +92,17 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
     @Override
     public void onEnable()
     {
+        if ( getServer().getPluginManager().getPlugin( "WorldGuard" ) != null )
+        {
+            regionManager.registerHandler( new WorldGuardHandler() );
+        }
         getServer().getPluginManager().registerEvents( this, this );
     }
 
     @Override
     public void onDisable()
     {
-        super.onDisable();
-    }
-
-    @Override
-    public InvitationManager getInvitationManager()
-    {
-        return null;
+        connector.closeConnection();
     }
 
     @EventHandler

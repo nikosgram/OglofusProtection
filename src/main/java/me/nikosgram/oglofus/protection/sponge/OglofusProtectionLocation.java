@@ -16,9 +16,15 @@
 
 package me.nikosgram.oglofus.protection.sponge;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.google.common.base.Optional;
 import lombok.Getter;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
+import me.nikosgram.oglofus.utils.OglofusUtils;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.extent.Extent;
 
 import java.util.UUID;
 
@@ -55,7 +61,7 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Override
     public String getWorldName()
     {
-        return sponge.getGame().getServer().getWorld( world ).get().getName();
+        return getWorldAs( World.class ).get().getName();
     }
 
     @Override
@@ -70,12 +76,33 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Override
     public < T > Optional< T > getWorldAs( Class< T > tClass )
     {
+        if ( OglofusUtils.equalClass( tClass, World.class ) )
+        {
+            return Optional.of( ( T ) sponge.getServer().getWorld( world ) );
+        } else
+            if ( OglofusUtils.equalClass( tClass, Extent.class ) )
+            {
+                getLocationAs( Location.class ).get().getExtent();
+            }
         return Optional.absent();
     }
 
     @Override
     public < T > Optional< T > getLocationAs( Class< T > tClass )
     {
+        Location location = new Location( getWorldAs( World.class ).get(), x, y, z );
+        if ( OglofusUtils.equalClass( tClass, Location.class ) )
+        {
+            return Optional.of( ( T ) location );
+        } else
+            if ( OglofusUtils.equalClass( tClass, BlockState.class ) )
+            {
+                return Optional.of( ( T ) location.getState() );
+            } else
+                if ( OglofusUtils.equalClass( tClass, Vector3d.class ) )
+                {
+                    return Optional.of( ( T ) location.getPosition() );
+                }
         return Optional.absent();
     }
 

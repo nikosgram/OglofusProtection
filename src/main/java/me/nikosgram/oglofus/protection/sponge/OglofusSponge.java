@@ -32,11 +32,13 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Server;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
 import org.spongepowered.api.event.state.PreInitializationEvent;
+import org.spongepowered.api.event.state.ServerStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.world.World;
@@ -54,6 +56,9 @@ public class OglofusSponge implements ProtectionPlugin
     private Game                                              game;
     @Getter
     @Inject
+    private Server                                            server;
+    @Getter
+    @Inject
     private Logger                                            logger;
     @Getter
     @Inject
@@ -69,6 +74,8 @@ public class OglofusSponge implements ProtectionPlugin
     private DatabaseConnector                                 connector;
     @Getter
     private RegionManager                                     regionManager;
+    @Getter
+    private InvitationManager                                 invitationManager;
 
     public OglofusSponge()
     {
@@ -137,10 +144,10 @@ public class OglofusSponge implements ProtectionPlugin
         }
     }
 
-    @Override
-    public InvitationManager getInvitationManager()
+    @Subscribe
+    public void onServerStopped( ServerStoppedEvent event )
     {
-        return null;
+        connector.closeConnection();
     }
 
     @Subscribe

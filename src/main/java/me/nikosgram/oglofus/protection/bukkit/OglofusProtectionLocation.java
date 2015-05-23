@@ -19,6 +19,12 @@ package me.nikosgram.oglofus.protection.bukkit;
 import com.google.common.base.Optional;
 import lombok.Getter;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
+import me.nikosgram.oglofus.utils.OglofusUtils;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -55,7 +61,7 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Override
     public String getWorldName()
     {
-        return bukkit.getServer().getWorld( world ).getName();
+        return getWorldAs( World.class ).get().getName();
     }
 
     @Override
@@ -70,12 +76,33 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Override
     public < T > Optional< T > getWorldAs( Class< T > tClass )
     {
+        if ( OglofusUtils.equalClass( tClass, World.class ) )
+        {
+            return Optional.of( ( T ) bukkit.getServer().getWorld( world ) );
+        } else
+            if ( OglofusUtils.equalClass( tClass, Chunk.class ) )
+            {
+                return Optional.of( ( T ) getLocationAs( Location.class ).get().getChunk() );
+            }
         return Optional.absent();
     }
 
     @Override
     public < T > Optional< T > getLocationAs( Class< T > tClass )
     {
+        Location location = new Location( getWorldAs( World.class ).get(), x, y, z );
+        if ( OglofusUtils.equalClass( tClass, Location.class ) )
+        {
+            return Optional.of( ( T ) location );
+        } else
+            if ( OglofusUtils.equalClass( tClass, Block.class ) )
+            {
+                return Optional.of( ( T ) location.getBlock() );
+            } else
+                if ( OglofusUtils.equalClass( tClass, Vector.class ) )
+                {
+                    return Optional.of( ( T ) location.toVector() );
+                }
         return Optional.absent();
     }
 
