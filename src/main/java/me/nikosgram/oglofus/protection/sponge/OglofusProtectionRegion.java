@@ -45,10 +45,16 @@ public class OglofusProtectionRegion implements ProtectionRegion
         this.name = this.sponge.getConnector().getString(
                 "oglofus_regions", "uuid", this.uuid.toString(), "name"
         ).get();
-        this.protectionStaff = null;
+        this.protectionStaff = new OglofusProtectionStaff( this.uuid, this.sponge );
         this.protectionVector = new OglofusProtectionVector( this.uuid, this.sponge );
     }
 
+    /**
+     * Change the region's name.
+     *
+     * @param name the new name.
+     * @return the response.
+     */
     @Override
     public ActionResponse changeName( String name )
     {
@@ -65,6 +71,13 @@ public class OglofusProtectionRegion implements ProtectionRegion
         return ActionResponse.Successful.setMessage( this.name );
     }
 
+    /**
+     * Change the region's name.
+     *
+     * @param sender who want to change the name.
+     * @param name   the new name.
+     * @return the response.
+     */
     @Override
     public ActionResponse changeName( Object sender, String name )
     {

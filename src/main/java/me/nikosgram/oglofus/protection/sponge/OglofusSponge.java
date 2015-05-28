@@ -55,7 +55,6 @@ public class OglofusSponge implements ProtectionPlugin
     @Inject
     private Game                                              game;
     @Getter
-    @Inject
     private Server                                            server;
     @Getter
     @Inject
@@ -85,6 +84,7 @@ public class OglofusSponge implements ProtectionPlugin
     @Subscribe
     public void onPreInitialization( PreInitializationEvent event )
     {
+        this.server = game.getServer();
         try
         {
             if ( !configFile.exists() )

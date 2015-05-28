@@ -55,13 +55,13 @@ public class OglofusProtectionVector implements ProtectionVector
     protected OglofusProtectionVector( UUID uuid, OglofusSponge sponge )
     {
         this.sponge = sponge;
-        this.radius = ( int ) sponge.getConnector().getObject(
+        this.radius = ( int ) this.sponge.getConnector().getObject(
                 "oglofus_vectors", "uuid", uuid.toString(), "radius"
         ).get();
         this.blockLocation = new OglofusProtectionLocation(
-                sponge,
+                this.sponge,
                 UUID.fromString(
-                        sponge.getConnector().getString(
+                        this.sponge.getConnector().getString(
                                 "oglofus_vectors", "uuid", uuid.toString(), "world"
                         ).get()
                 ),
