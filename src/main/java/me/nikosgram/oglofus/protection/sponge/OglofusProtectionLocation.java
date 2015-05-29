@@ -78,7 +78,7 @@ public class OglofusProtectionLocation implements ProtectionLocation
     {
         if ( OglofusUtils.equalClass( tClass, World.class ) )
         {
-            return Optional.of( ( T ) sponge.getServer().getWorld( world ) );
+            return Optional.of( ( T ) sponge.getServer().getWorld( this.world ) );
         } else
             if ( OglofusUtils.equalClass( tClass, Extent.class ) )
             {
@@ -90,7 +90,7 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Override
     public < T > Optional< T > getLocationAs( Class< T > tClass )
     {
-        Location location = new Location( getWorldAs( World.class ).get(), x, y, z );
+        Location location = new Location( getWorldAs( World.class ).get(), this.x, this.y, this.z );
         if ( OglofusUtils.equalClass( tClass, Location.class ) )
         {
             return Optional.of( ( T ) location );
@@ -114,18 +114,18 @@ public class OglofusProtectionLocation implements ProtectionLocation
 
         OglofusProtectionLocation that = ( OglofusProtectionLocation ) o;
 
-        if ( x != that.x ) return false;
-        if ( y != that.y ) return false;
-        if ( z != that.z ) return false;
-        if ( sponge != null ? !sponge.equals( that.sponge ) : that.sponge != null ) return false;
-        return !( world != null ? !world.equals( that.world ) : that.world != null );
+        if ( this.x != that.x ) return false;
+        if ( this.y != that.y ) return false;
+        if ( this.z != that.z ) return false;
+        if ( this.sponge != null ? !this.sponge.equals( that.sponge ) : that.sponge != null ) return false;
+        return !( this.world != null ? !this.world.equals( that.world ) : that.world != null );
     }
 
     @Override
     public int hashCode()
     {
-        int result = sponge != null ? sponge.hashCode() : 0;
-        result = 31 * result + ( world != null ? world.hashCode() : 0 );
+        int result = this.sponge != null ? this.sponge.hashCode() : 0;
+        result = 31 * result + ( this.world != null ? this.world.hashCode() : 0 );
         result = 31 * result + x;
         result = 31 * result + y;
         result = 31 * result + z;
@@ -136,10 +136,10 @@ public class OglofusProtectionLocation implements ProtectionLocation
     public String toString()
     {
         return "ProtectionLocation{" +
-                ", world=" + world +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
+                ", world=" + this.world +
+                ", x=" + this.x +
+                ", y=" + this.y +
+                ", z=" + this.z +
                 '}';
     }
 }

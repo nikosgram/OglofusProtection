@@ -35,7 +35,7 @@ public class OglofusRegionManager implements RegionManager
     protected OglofusRegionManager( OglofusBukkit bukkit )
     {
         this.bukkit = bukkit;
-        bukkit.getConnector().createTable(
+        this.bukkit.getConnector().createTable(
                 "oglofus_regions",
                 "id int identity(1,1) primary key",
                 "uuid varchar(36)",
@@ -43,7 +43,7 @@ public class OglofusRegionManager implements RegionManager
                 "owner varchar(36)",
                 "created date"
         );
-        bukkit.getConnector().createTable(
+        this.bukkit.getConnector().createTable(
                 "oglofus_vectors",
                 "id int identity(1,1) primary key",
                 "uuid varchar(36)",
@@ -53,27 +53,20 @@ public class OglofusRegionManager implements RegionManager
                 "z int",
                 "world varchar(36)"
         );
-        bukkit.getConnector().createTable(
-                "oglofus_staff",
-                "id int identity(1,1) primary key",
-                "uuid varchar(36)",
-                "player varchar(36)",
-                "rank varchar(10)"
-        );
 
-        for ( String uid : bukkit.getConnector().getStringList( "select uuid from oglofus_regions", "uuid" ) )
+        for ( String uid : this.bukkit.getConnector().getStringList( "select uuid from oglofus_regions", "uuid" ) )
         {
             UUID uuid = UUID.fromString( uid );
-            map.put( uuid, new OglofusProtectionRegion( uuid, bukkit ) );
+            map.put( uuid, new OglofusProtectionRegion( uuid, this.bukkit ) );
         }
     }
 
     @Override
     public Optional< ProtectionRegion > getRegion( UUID target )
     {
-        if ( map.containsKey( target ) )
+        if ( this.map.containsKey( target ) )
         {
-            return Optional.of( map.get( target ) );
+            return Optional.of( this.map.get( target ) );
         }
         return Optional.absent();
     }
@@ -82,12 +75,13 @@ public class OglofusRegionManager implements RegionManager
     public Optional< ProtectionRegion > getRegion( String target )
     {
         String uid;
-        if ( ( uid = bukkit.getConnector().getString( "oglofus_regions", "name", target, "uuid" ).orNull() ) != null )
+        if ( ( uid = this.bukkit.getConnector().getString( "oglofus_regions", "name", target, "uuid" ).orNull() ) !=
+                null )
         {
             UUID uuid = UUID.fromString( uid );
-            if ( map.containsKey( uuid ) )
+            if ( this.map.containsKey( uuid ) )
             {
-                return Optional.of( map.get( uuid ) );
+                return Optional.of( this.map.get( uuid ) );
             }
         }
         return Optional.absent();
@@ -98,7 +92,7 @@ public class OglofusRegionManager implements RegionManager
     {
         String uid;
         if ( (
-                uid = bukkit.getConnector().getString(
+                uid = this.bukkit.getConnector().getString(
                         "select uuid from oglofus_vectors where x=" +
                                 location.getX() +
                                 " and y=" +
@@ -109,9 +103,9 @@ public class OglofusRegionManager implements RegionManager
         ) != null )
         {
             UUID uuid = UUID.fromString( uid );
-            if ( map.containsKey( uuid ) )
+            if ( this.map.containsKey( uuid ) )
             {
-                return Optional.of( map.get( uuid ) );
+                return Optional.of( this.map.get( uuid ) );
             }
         }
         for ( ProtectionRegion region : getRegions() )
@@ -138,24 +132,26 @@ public class OglofusRegionManager implements RegionManager
     @Override
     public Collection< ProtectionRegion > getRegions()
     {
-        return map.values();
+        return this.map.values();
     }
 
     @Override
-    public ActionResponse createProtectionArea( ProtectionLocation location, UUID owner )
+    public ActionResponse createProtectionRegion( ProtectionLocation location, UUID owner )
     {
+        //TODO create a new protection region!
         return null;
     }
 
     @Override
-    public ActionResponse deleteProtectionArea( ProtectionRegion area, UUID owner )
+    public ActionResponse deleteProtectionRegion( ProtectionRegion area )
     {
+        //TODO delete a protection region!
         return null;
     }
 
     @Override
     public void registerHandler( Handler handler )
     {
-        handlers.add( handler );
+        this.handlers.add( handler );
     }
 }

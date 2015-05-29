@@ -45,7 +45,7 @@ public class OglofusProtectionRegion implements ProtectionRegion
         this.name = this.bukkit.getConnector().getString(
                 "oglofus_regions", "uuid", this.uuid.toString(), "name"
         ).get();
-        this.protectionStaff = null;
+        this.protectionStaff = new OglofusProtectionStaff( this, this.bukkit );
         this.protectionVector = new OglofusProtectionVector( this.uuid, this.bukkit );
     }
 

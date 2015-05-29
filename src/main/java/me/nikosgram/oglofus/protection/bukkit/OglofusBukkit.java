@@ -59,7 +59,7 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
 
         if ( getConfig().getString( "database.type" ).equalsIgnoreCase( "sqlite" ) )
         {
-            connector = new DatabaseConnector(
+            this.connector = new DatabaseConnector(
                     new SQLiteDatabaseDriver(
                             Paths.get(
                                     getConfig().getString(
@@ -70,7 +70,7 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
             );
         } else
         {
-            connector = new DatabaseConnector(
+            this.connector = new DatabaseConnector(
                     new MySQLDatabaseDriver(
                             getConfig().getString( "database.user" ),
                             getConfig().getString( "database.data" ),
@@ -81,11 +81,12 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
             );
         }
 
-        connector.openConnection();
+        this.connector.openConnection();
 
         if ( connector.checkConnection() )
         {
-            regionManager = new OglofusRegionManager( this );
+            this.regionManager = new OglofusRegionManager( this );
+            this.invitationManager = new OglofusInvitationManager(this);
         }
     }
 
@@ -94,7 +95,7 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
     {
         if ( getServer().getPluginManager().getPlugin( "WorldGuard" ) != null )
         {
-            regionManager.registerHandler( new WorldGuardHandler() );
+            this.regionManager.registerHandler( new WorldGuardHandler() );
         }
         getServer().getPluginManager().registerEvents( this, this );
     }

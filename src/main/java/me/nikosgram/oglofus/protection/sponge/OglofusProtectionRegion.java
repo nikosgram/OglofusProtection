@@ -45,7 +45,7 @@ public class OglofusProtectionRegion implements ProtectionRegion
         this.name = this.sponge.getConnector().getString(
                 "oglofus_regions", "uuid", this.uuid.toString(), "name"
         ).get();
-        this.protectionStaff = new OglofusProtectionStaff( this.uuid, this.sponge );
+        this.protectionStaff = new OglofusProtectionStaff( this, this.sponge );
         this.protectionVector = new OglofusProtectionVector( this.uuid, this.sponge );
     }
 
@@ -87,7 +87,7 @@ public class OglofusProtectionRegion implements ProtectionRegion
             {
                 if ( getProtectionStaff().hasOwnerAccess( ( ( Player ) sender ).getUniqueId() ) )
                 {
-                    return changeName( name );
+                    return this.changeName( name );
                 }
                 return ActionResponse.Failure.setMessage( "access" );
             }

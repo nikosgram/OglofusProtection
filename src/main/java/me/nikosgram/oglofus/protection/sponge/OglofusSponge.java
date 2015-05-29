@@ -84,40 +84,40 @@ public class OglofusSponge implements ProtectionPlugin
     @Subscribe
     public void onPreInitialization( PreInitializationEvent event )
     {
-        this.server = game.getServer();
+        this.server = this.game.getServer();
         try
         {
-            if ( !configFile.exists() )
+            if ( !this.configFile.exists() )
             {
-                Files.createFile( configFile.toPath() );
-                config = configManager.load();
+                Files.createFile( this.configFile.toPath() );
+                this.config = this.configManager.load();
 
-                config.getNode( "ConfigVersion" ).setValue( 1 );
+                this.config.getNode( "ConfigVersion" ).setValue( 1 );
 
-                config.getNode( "database", "type" ).setValue( "mysql" );
-                config.getNode( "database", "host" ).setValue( "localhost" );
-                config.getNode( "database", "port" ).setValue( 3306 );
-                config.getNode( "database", "user" ).setValue( "root" );
-                config.getNode( "database", "pass" ).setValue( "password" );
-                config.getNode( "database", "data" ).setValue( "database" );
+                this.config.getNode( "database", "type" ).setValue( "mysql" );
+                this.config.getNode( "database", "host" ).setValue( "localhost" );
+                this.config.getNode( "database", "port" ).setValue( 3306 );
+                this.config.getNode( "database", "user" ).setValue( "root" );
+                this.config.getNode( "database", "pass" ).setValue( "password" );
+                this.config.getNode( "database", "data" ).setValue( "database" );
 
-                configManager.save( config );
-                logger.info(
+                this.configManager.save( config );
+                this.logger.info(
                         "Created default configuration, " +
                                 "OglofusProtection will not run until you have edited this file!"
                 );
             }
         } catch ( IOException exception )
         {
-            logger.error( "Couldn't create default configuration file!" );
+            this.logger.error( "Couldn't create default configuration file!" );
         }
 
-        if ( config.getNode( "database", "type" ).getString().equalsIgnoreCase( "sqlite" ) )
+        if ( this.config.getNode( "database", "type" ).getString().equalsIgnoreCase( "sqlite" ) )
         {
-            connector = new DatabaseConnector(
+            this.connector = new DatabaseConnector(
                     new SQLiteDatabaseDriver(
                             Paths.get(
-                                    config.getNode(
+                                    this.config.getNode(
                                             "database", "host"
                                     ).getString()
                             )
@@ -125,29 +125,30 @@ public class OglofusSponge implements ProtectionPlugin
             );
         } else
         {
-            connector = new DatabaseConnector(
+            this.connector = new DatabaseConnector(
                     new MySQLDatabaseDriver(
-                            config.getNode( "database", "user" ).getString(),
-                            config.getNode( "database", "data" ).getString(),
-                            config.getNode( "database", "pass" ).getString(),
-                            config.getNode( "database", "host" ).getString(),
-                            config.getNode( "database", "port" ).getInt()
+                            this.config.getNode( "database", "user" ).getString(),
+                            this.config.getNode( "database", "data" ).getString(),
+                            this.config.getNode( "database", "pass" ).getString(),
+                            this.config.getNode( "database", "host" ).getString(),
+                            this.config.getNode( "database", "port" ).getInt()
                     )
             );
         }
 
-        connector.openConnection();
+        this.connector.openConnection();
 
-        if ( connector.checkConnection() )
+        if ( this.connector.checkConnection() )
         {
-            regionManager = new OglofusRegionManager( this );
+            this.regionManager = new OglofusRegionManager( this );
+            this.invitationManager = new OglofusInvitationManager( this );
         }
     }
 
     @Subscribe
     public void onServerStopped( ServerStoppedEvent event )
     {
-        connector.closeConnection();
+        this.connector.closeConnection();
     }
 
     @Subscribe

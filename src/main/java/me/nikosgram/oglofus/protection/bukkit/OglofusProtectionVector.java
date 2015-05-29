@@ -58,32 +58,39 @@ public class OglofusProtectionVector implements ProtectionVector
                 "oglofus_vectors", "uuid", uuid.toString(), "radius"
         ).get();
         this.blockLocation = new OglofusProtectionLocation(
-                bukkit,
+                this.bukkit,
                 UUID.fromString(
                         bukkit.getConnector().getString(
                                 "oglofus_vectors", "uuid", uuid.toString(), "world"
                         ).get()
                 ),
-                ( int ) bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "x" ).get(),
-                ( int ) bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "y" ).get(),
-                ( int ) bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "z" ).get()
+                ( int ) this.bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "x" ).get(),
+                ( int ) this.bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "y" ).get(),
+                ( int ) this.bukkit.getConnector().getObject( "oglofus_vectors", "uuid", uuid.toString(), "z" ).get()
         );
-        this.minLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add( -radius, -radius, -radius );
-        this.maxLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add( radius, radius, radius );
+        this.minLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add(
+                -this.radius, -this.radius, -this.radius
+        );
+        this.maxLocation = new OglofusProtectionLocation( bukkit, getBlockLocation() ).add(
+                this.radius, this.radius, this.radius
+        );
     }
 
     @Override
     public < T > Collection< T > getBlocks( Class< T > tClass )
     {
         List< T > returned = new ArrayList< T >();
-        for ( int location_x = minLocation.getX(); location_x <= maxLocation.getX(); location_x++ )
+        for ( int location_x = this.minLocation.getX(); location_x <= this.maxLocation.getX(); location_x++ )
         {
-            for ( int location_y = minLocation.getY(); location_y <= maxLocation.getY(); location_y++ )
+            for ( int location_y = this.minLocation.getY(); location_y <= this.maxLocation.getY(); location_y++ )
             {
-                for ( int location_z = minLocation.getZ(); location_z <= maxLocation.getZ(); location_z++ )
+                for ( int location_z = this.minLocation.getZ(); location_z <= this.maxLocation.getZ(); location_z++ )
                 {
                     Location location = new Location(
-                            bukkit.getServer().getWorld( blockLocation.getWorld() ), location_x, location_y, location_z
+                            this.bukkit.getServer().getWorld( this.blockLocation.getWorld() ),
+                            location_x,
+                            location_y,
+                            location_z
                     );
                     if ( OglofusUtils.equalClass( tClass, Location.class ) )
                     {
@@ -109,13 +116,13 @@ public class OglofusProtectionVector implements ProtectionVector
         List< T > returned = new ArrayList< T >();
         if ( OglofusUtils.equalClass( tClass, Entity.class ) )
         {
-            for ( Entity entity : bukkit.getServer().getWorld( blockLocation.getWorld() ).getEntities() )
+            for ( Entity entity : this.bukkit.getServer().getWorld( this.blockLocation.getWorld() ).getEntities() )
             {
-                if ( Math.abs( blockLocation.getX() - entity.getLocation().getX() ) <= radius )
+                if ( Math.abs( this.blockLocation.getX() - entity.getLocation().getX() ) <= this.radius )
                 {
-                    if ( Math.abs( blockLocation.getY() - entity.getLocation().getY() ) <= radius )
+                    if ( Math.abs( this.blockLocation.getY() - entity.getLocation().getY() ) <= this.radius )
                     {
-                        if ( Math.abs( blockLocation.getZ() - entity.getLocation().getZ() ) <= radius )
+                        if ( Math.abs( this.blockLocation.getZ() - entity.getLocation().getZ() ) <= this.radius )
                         {
                             returned.add( ( T ) entity );
                         }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.nikosgram.oglofus.protection.sponge;
+package me.nikosgram.oglofus.protection.bukkit;
 
 import com.google.common.base.Optional;
 import lombok.Getter;
@@ -23,12 +23,11 @@ import me.nikosgram.oglofus.protection.api.region.ProtectionRank;
 import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
 import me.nikosgram.oglofus.protection.api.region.ProtectionStaff;
 import me.nikosgram.oglofus.utils.OglofusUtils;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.entity.player.User;
-import org.spongepowered.api.service.user.UserStorage;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandSource;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -38,18 +37,18 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Getter
     private final UUID             owner;
     private final ProtectionRegion region;
-    private final OglofusSponge    sponge;
+    private final OglofusBukkit    bukkit;
 
-    protected OglofusProtectionStaff( ProtectionRegion region, OglofusSponge sponge )
+    protected OglofusProtectionStaff( ProtectionRegion region, OglofusBukkit sponge )
     {
         this.region = region;
-        this.sponge = sponge;
+        this.bukkit = sponge;
         this.owner = UUID.fromString(
-                this.sponge.getConnector().getString(
+                this.bukkit.getConnector().getString(
                         "oglofus_regions", "uuid", region.getUuid().toString(), "owner"
                 ).get()
         );
-        Map< String, String > staff = this.sponge.getConnector().getStringMap(
+        Map< String, String > staff = this.bukkit.getConnector().getStringMap(
                 "oglofus_regions", "uuid", region.getUuid().toString(), new String[]{ "player", "rank" }
         );
         for ( String uid : staff.keySet() )
@@ -69,16 +68,11 @@ public class OglofusProtectionStaff implements ProtectionStaff
     {
         if ( OglofusUtils.equalClass( tClass, Player.class ) )
         {
-            return ( Optional< T > ) this.sponge.getServer().getPlayer( owner );
+            return ( Optional< T > ) this.bukkit.getServer().getPlayer( owner );
         } else
-            if ( OglofusUtils.equalClass( tClass, User.class ) )
+            if ( OglofusUtils.equalClass( tClass, OfflinePlayer.class ) )
             {
-                UserStorage storage;
-                if ( ( storage = this.sponge.getGame().getServiceManager().provide( UserStorage.class ).orNull() ) !=
-                        null )
-                {
-                    return ( Optional< T > ) storage.get( owner ).orNull();
-                }
+                return ( Optional< T > ) this.bukkit.getServer().getOfflinePlayer( owner );
             }
         return Optional.absent();
     }
@@ -98,25 +92,20 @@ public class OglofusProtectionStaff implements ProtectionStaff
             for ( UUID uuid : getOfficers() )
             {
                 Player player;
-                if ( ( player = this.sponge.getServer().getPlayer( uuid ).orNull() ) != null )
+                if ( ( player = this.bukkit.getServer().getPlayer( uuid ) ) != null )
                 {
                     returned.add( ( T ) player );
                 }
             }
         } else
-            if ( OglofusUtils.equalClass( tClass, User.class ) )
+            if ( OglofusUtils.equalClass( tClass, OfflinePlayer.class ) )
             {
-                UserStorage storage;
-                if ( ( storage = this.sponge.getGame().getServiceManager().provide( UserStorage.class ).orNull() ) !=
-                        null )
+                for ( UUID uuid : getOfficers() )
                 {
-                    for ( UUID uuid : getOfficers() )
+                    OfflinePlayer player;
+                    if ( ( player = this.bukkit.getServer().getOfflinePlayer( uuid ) ) != null )
                     {
-                        User player;
-                        if ( ( player = storage.get( uuid ).orNull() ) != null )
-                        {
-                            returned.add( ( T ) player );
-                        }
+                        returned.add( ( T ) player );
                     }
                 }
             }
@@ -157,25 +146,20 @@ public class OglofusProtectionStaff implements ProtectionStaff
             for ( UUID uuid : getMembers() )
             {
                 Player player;
-                if ( ( player = this.sponge.getServer().getPlayer( uuid ).orNull() ) != null )
+                if ( ( player = this.bukkit.getServer().getPlayer( uuid ) ) != null )
                 {
                     returned.add( ( T ) player );
                 }
             }
         } else
-            if ( OglofusUtils.equalClass( tClass, User.class ) )
+            if ( OglofusUtils.equalClass( tClass, OfflinePlayer.class ) )
             {
-                UserStorage storage;
-                if ( ( storage = this.sponge.getGame().getServiceManager().provide( UserStorage.class ).orNull() ) !=
-                        null )
+                for ( UUID uuid : getMembers() )
                 {
-                    for ( UUID uuid : getMembers() )
+                    OfflinePlayer player;
+                    if ( ( player = this.bukkit.getServer().getOfflinePlayer( uuid ) ) != null )
                     {
-                        User player;
-                        if ( ( player = storage.get( uuid ).orNull() ) != null )
-                        {
-                            returned.add( ( T ) player );
-                        }
+                        returned.add( ( T ) player );
                     }
                 }
             }
@@ -216,25 +200,20 @@ public class OglofusProtectionStaff implements ProtectionStaff
             for ( UUID uuid : this.staff.keySet() )
             {
                 Player player;
-                if ( ( player = this.sponge.getServer().getPlayer( uuid ).orNull() ) != null )
+                if ( ( player = this.bukkit.getServer().getPlayer( uuid ) ) != null )
                 {
                     returned.add( ( T ) player );
                 }
             }
         } else
-            if ( OglofusUtils.equalClass( tClass, User.class ) )
+            if ( OglofusUtils.equalClass( tClass, OfflinePlayer.class ) )
             {
-                UserStorage storage;
-                if ( ( storage = this.sponge.getGame().getServiceManager().provide( UserStorage.class ).orNull() ) !=
-                        null )
+                for ( UUID uuid : this.staff.keySet() )
                 {
-                    for ( UUID uuid : this.staff.keySet() )
+                    OfflinePlayer player;
+                    if ( ( player = this.bukkit.getServer().getOfflinePlayer( uuid ) ) != null )
                     {
-                        User player;
-                        if ( ( player = storage.get( uuid ).orNull() ) != null )
-                        {
-                            returned.add( ( T ) player );
-                        }
+                        returned.add( ( T ) player );
                     }
                 }
             }
@@ -314,7 +293,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
             return true;
         }
         Player player;
-        return ( player = this.sponge.getServer().getPlayer( target ).orNull() ) != null &&
+        return ( player = this.bukkit.getServer().getPlayer( target ) ) != null &&
                 player.hasPermission( "oglofus.protection.bypass.owner" );
     }
 
@@ -332,7 +311,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
             return true;
         }
         Player player;
-        return ( player = this.sponge.getServer().getPlayer( target ).orNull() ) != null &&
+        return ( player = this.bukkit.getServer().getPlayer( target ) ) != null &&
                 player.hasPermission( "oglofus.protection.bypass.officer" );
     }
 
@@ -350,7 +329,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
             return true;
         }
         Player player;
-        return ( player = this.sponge.getServer().getPlayer( target ).orNull() ) != null &&
+        return ( player = this.bukkit.getServer().getPlayer( target ) ) != null &&
                 player.hasPermission( "oglofus.protection.bypass.member" );
     }
 
@@ -374,7 +353,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public void broadcast( String message )
     {
-        broadcastRaw( Texts.of( message ) );
+        broadcastRaw( new TextComponent( message ) );
     }
 
     /**
@@ -386,7 +365,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public void broadcast( String message, ProtectionRank rank )
     {
-        broadcastRaw( Texts.of( message ), rank );
+        broadcastRaw( new TextComponent( message ), rank );
     }
 
     /**
@@ -397,11 +376,11 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public void broadcastRaw( Object message )
     {
-        if ( message instanceof Text )
+        if ( message instanceof BaseComponent )
         {
             for ( Player player : getStaffAs( Player.class ) )
             {
-                player.sendMessage( ( Text ) message );
+                player.spigot().sendMessage( ( BaseComponent ) message );
             }
         }
     }
@@ -415,27 +394,27 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public void broadcastRaw( Object message, ProtectionRank rank )
     {
-        if ( message instanceof Text )
+        if ( message instanceof BaseComponent )
         {
             switch ( rank )
             {
                 case Member:
                     for ( Player player : getMembersAs( Player.class ) )
                     {
-                        player.sendMessage( ( Text ) message );
+                        player.spigot().sendMessage( ( BaseComponent ) message );
                     }
                     break;
                 case Officer:
                     for ( Player player : getOfficersAs( Player.class ) )
                     {
-                        player.sendMessage( ( Text ) message );
+                        player.spigot().sendMessage( ( BaseComponent ) message );
                     }
                     break;
                 case Owner:
                     Player player;
                     if ( ( player = getOwnerAs( Player.class ).orNull() ) != null )
                     {
-                        player.sendMessage( ( Text ) message );
+                        player.spigot().sendMessage( ( BaseComponent ) message );
                     }
                     break;
             }
@@ -464,7 +443,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public ActionResponse invite( Object sender, UUID target )
     {
-        return this.sponge.getInvitationManager().invite( sender, target, this.region );
+        return this.bukkit.getInvitationManager().invite( sender, target, this.region );
     }
 
     /**
@@ -476,7 +455,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public ActionResponse invite( UUID target )
     {
-        return this.sponge.getInvitationManager().invite( target, this.region );
+        return this.bukkit.getInvitationManager().invite( target, this.region );
     }
 
     /**
@@ -489,19 +468,20 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public ActionResponse kick( Object sender, UUID target )
     {
-        if ( sender instanceof CommandSource )
+        if ( sender instanceof CommandSender )
         {
             if ( sender instanceof Player )
             {
-                if ( hasOwnerAccess( ( ( Player ) sender ).getUniqueId() ) )
+                if ( region.getProtectionStaff().hasOwnerAccess( ( ( Player ) sender ).getUniqueId() ) )
                 {
-                    return this.kick( target );
+                    //TODO: call the handler PlayerKickHandler.
+                    return kick( target );
                 }
                 return ActionResponse.Failure.setMessage( "access" );
             }
-            if ( ( ( CommandSource ) sender ).hasPermission( "oglofus.protection.bypass.kick" ) )
+            if ( ( ( CommandSender ) sender ).hasPermission( "oglofus.protection.bypass" ) )
             {
-                return this.kick( target );
+                return kick( target );
             }
             return ActionResponse.Failure.setMessage( "access" );
         }
@@ -517,7 +497,7 @@ public class OglofusProtectionStaff implements ProtectionStaff
     @Override
     public ActionResponse kick( UUID target )
     {
-        //TODO: make it!
+        //TODO: call the handler PlayerKickHandler.
         return null;
     }
 

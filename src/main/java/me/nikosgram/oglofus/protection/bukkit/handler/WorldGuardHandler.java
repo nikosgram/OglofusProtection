@@ -22,8 +22,6 @@ import me.nikosgram.oglofus.protection.api.handler.ProtectionCreateHandler;
 import me.nikosgram.oglofus.protection.api.region.ProtectionVector;
 import org.bukkit.Location;
 
-import java.util.UUID;
-
 public class WorldGuardHandler implements ProtectionCreateHandler
 {
     public boolean hasRegion( Location loc )
@@ -32,7 +30,7 @@ public class WorldGuardHandler implements ProtectionCreateHandler
     }
 
     @Override
-    public boolean execute( ProtectionVector vector, Optional< UUID > sender )
+    public boolean execute( ProtectionVector vector, Optional< Object > sender )
     {
         for ( Location location : vector.getBlocks( Location.class ) )
         {
