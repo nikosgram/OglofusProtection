@@ -36,7 +36,7 @@ public class OglofusUtils
         return object;
     }
 
-    public static < T > List< T > toPage( int page, int size, List< T > list )
+    public static < T > List< T > page( int page, int size, List< T > list )
     {
         List< T > returned = new ArrayList< T >();
         if ( ( size * page ) > list.size() )
@@ -62,7 +62,7 @@ public class OglofusUtils
 
     public static String notEmpty( String string, String message )
     {
-        if ( string == null || string.length() == 0 )
+        if ( string == null || string.length() == 0 || string.trim().length() == 0 )
         {
             throw new IllegalArgumentException( message );
         }

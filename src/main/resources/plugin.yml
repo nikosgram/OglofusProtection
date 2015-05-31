@@ -1,12 +1,15 @@
-name: ${project.name}
-version: ${project.version}
-main: me.nikosgram.oglofus.protection.bukkit.OglofusBukkit
-description: ${project.description}
+--- 
 author: nikosgram13
-
-commands:
-    protection:
-        description: Access to Oglofus-Protection commands
-        aliases: [protect, protector, p]
-        permission: oglofus.protection.command
-        usage: /<command>
+commands: 
+  protection: 
+    aliases: 
+      - protect
+      - protector
+      - p
+    description: "Access to Oglofus-Protection commands"
+    permission: oglofus.protection.command
+    usage: /<command>
+description: "${project.description}"
+main: me.nikosgram.oglofus.protection.bukkit.OglofusBukkit
+name: "${project.name}"
+version: "${project.version}"

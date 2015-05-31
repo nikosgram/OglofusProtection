@@ -27,6 +27,8 @@ import me.nikosgram.oglofus.protection.api.plugin.ProtectionPlugin;
 import me.nikosgram.oglofus.protection.api.region.ProtectionLocation;
 import me.nikosgram.oglofus.protection.api.region.ProtectionRegion;
 import me.nikosgram.oglofus.protection.bukkit.handler.WorldGuardHandler;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -36,6 +38,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Paths;
+import java.util.List;
 
 public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Listener
 {
@@ -104,6 +107,20 @@ public class OglofusBukkit extends JavaPlugin implements ProtectionPlugin, Liste
     public void onDisable()
     {
         connector.closeConnection();
+    }
+
+    @Override
+    public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
+    {
+        //TODO
+        return super.onCommand( sender, command, label, args );
+    }
+
+    @Override
+    public List< String > onTabComplete( CommandSender sender, Command command, String alias, String[] args )
+    {
+        //TODO
+        return super.onTabComplete( sender, command, alias, args );
     }
 
     @EventHandler

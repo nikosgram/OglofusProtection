@@ -37,10 +37,19 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerPlaceBlockEvent;
+import org.spongepowered.api.event.state.InitializationEvent;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.args.GenericArguments;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
+import org.spongepowered.api.util.command.spec.CommandSpec;
 import org.spongepowered.api.world.World;
 
 import java.io.File;
@@ -101,6 +110,9 @@ public class OglofusSponge implements ProtectionPlugin
                 this.config.getNode( "database", "pass" ).setValue( "password" );
                 this.config.getNode( "database", "data" ).setValue( "database" );
 
+                this.config.getNode( "protection", "material" ).setValue( "SPONGE" );
+                this.config.getNode( "protection", "metadata" ).setValue( "protector" );
+
                 this.configManager.save( config );
                 this.logger.info(
                         "Created default configuration, " +
@@ -143,6 +155,133 @@ public class OglofusSponge implements ProtectionPlugin
             this.regionManager = new OglofusRegionManager( this );
             this.invitationManager = new OglofusInvitationManager( this );
         }
+    }
+
+    @Subscribe
+    public void onInitialization( InitializationEvent event )
+    {
+        CommandSpec info = CommandSpec.builder().permission( "oglofus.protection.command.info" ).description(
+                Texts.of( "Display the info from your region." )
+        ).arguments(
+                GenericArguments.optional( GenericArguments.string( Texts.of( "region" ) ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec invite = CommandSpec.builder().permission( "oglofus.protection.command.invite" ).description(
+                Texts.of( "Invite a player to your region." )
+        ).arguments(
+                GenericArguments.onlyOne( GenericArguments.player( Texts.of( "player" ), this.game ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec accept = CommandSpec.builder().permission( "oglofus.protection.command.accept" ).description(
+                Texts.of( "Accept a invitation." )
+        ).arguments(
+                GenericArguments.optional( GenericArguments.string( Texts.of( "region" ) ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec kick = CommandSpec.builder().permission( "oglofus.protection.command.kick" ).description(
+                Texts.of( "Kick a player from your region." )
+        ).arguments(
+                GenericArguments.onlyOne( GenericArguments.player( Texts.of( "player" ), this.game ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec promote = CommandSpec.builder().permission( "oglofus.protection.command.promote" ).description(
+                Texts.of( "Promote a player from member to officer in your region." )
+        ).arguments(
+                GenericArguments.onlyOne( GenericArguments.player( Texts.of( "player" ), this.game ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec demote = CommandSpec.builder().permission( "oglofus.protection.command.demote" ).description(
+                Texts.of( "Demote a player from officer to member in your region." )
+        ).arguments(
+                GenericArguments.onlyOne( GenericArguments.player( Texts.of( "player" ), this.game ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec give = CommandSpec.builder().permission( "oglofus.protection.command.give" ).description(
+                Texts.of( "Give to you a protection block." )
+        ).arguments(
+                GenericArguments.optional( GenericArguments.integer( Texts.of( "amount" ) ) ),
+                GenericArguments.optional( GenericArguments.player( Texts.of( "player" ), this.game ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        //TODO
+                        return null;
+                    }
+                }
+        ).build();
+
+        CommandSpec protection = CommandSpec.builder().permission( "oglofus.protection.command" ).description(
+                Texts.of( "Access to protection command." )
+        ).child( info, "info", "i", "here" ).child( invite, "invite", "inv" ).child(
+                accept, "accept", "acc"
+        ).child( kick, "kick" ).child( promote, "promote", "pro" ).child(
+                demote, "demote", "dem"
+        ).child( give, "give" ).build();
+
+        this.game.getCommandDispatcher().register( this, protection, "protection", "protector", "protect", "p" );
     }
 
     @Subscribe

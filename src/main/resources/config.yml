@@ -1,8 +1,12 @@
+---
 database:
-    port: 3306
-    #If you using sqlite, change this to file path
-    host: "./plugins/OglofusProtection/database.sql"
-    user: root
-    pass: password
-    data: database
-    type: sqlite
+  data: database
+  #If you using sqlite, change this to file path
+  host: ./plugins/OglofusProtection/database.sql
+  pass: password
+  port: 3306
+  type: sqlite
+  user: root
+protection:
+  material: SPONGE
+  metadata: protector
