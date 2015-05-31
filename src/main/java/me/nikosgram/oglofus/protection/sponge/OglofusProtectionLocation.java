@@ -40,6 +40,15 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Getter
     private       int           z;
 
+    protected OglofusProtectionLocation( OglofusSponge sponge, Location location )
+    {
+        this.sponge = sponge;
+        this.world = ( ( World ) location.getExtent() ).getUniqueId();
+        this.x = location.getBlockX();
+        this.y = location.getBlockY();
+        this.z = location.getBlockZ();
+    }
+
     protected OglofusProtectionLocation( OglofusSponge sponge, ProtectionLocation location )
     {
         this.sponge = sponge;

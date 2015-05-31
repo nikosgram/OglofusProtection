@@ -40,6 +40,15 @@ public class OglofusProtectionLocation implements ProtectionLocation
     @Getter
     private       int           z;
 
+    protected OglofusProtectionLocation( OglofusBukkit bukkit, Location location )
+    {
+        this.bukkit = bukkit;
+        this.world = location.getWorld().getUID();
+        this.x = location.getBlockX();
+        this.y = location.getBlockY();
+        this.z = location.getBlockZ();
+    }
+
     protected OglofusProtectionLocation( OglofusBukkit bukkit, ProtectionLocation location )
     {
         this.bukkit = bukkit;

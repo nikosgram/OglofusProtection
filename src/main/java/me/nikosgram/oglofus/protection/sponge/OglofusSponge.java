@@ -22,6 +22,7 @@ import me.nikosgram.oglofus.database.DatabaseConnector;
 import me.nikosgram.oglofus.database.MySQLDatabaseDriver;
 import me.nikosgram.oglofus.database.SQLiteDatabaseDriver;
 import me.nikosgram.oglofus.protection.api.OglofusProtection;
+import me.nikosgram.oglofus.protection.api.action.ActionResponse;
 import me.nikosgram.oglofus.protection.api.manager.InvitationManager;
 import me.nikosgram.oglofus.protection.api.manager.RegionManager;
 import me.nikosgram.oglofus.protection.api.plugin.ProtectionPlugin;
@@ -33,6 +34,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerBreakBlockEvent;
 import org.spongepowered.api.event.entity.player.PlayerInteractBlockEvent;
@@ -43,7 +45,9 @@ import org.spongepowered.api.event.state.ServerStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandPermissionException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.args.CommandContext;
@@ -218,8 +222,60 @@ public class OglofusSponge implements ProtectionPlugin
                     @Override
                     public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
                     {
-                        //TODO
-                        return null;
+                        if ( src instanceof Player )
+                        {
+                            Player player = ( Player ) src;
+                            ProtectionRegion region = OglofusSponge.this.regionManager.getRegion(
+                                    new OglofusProtectionLocation(
+                                            OglofusSponge.this, player.getLocation()
+                                    )
+                            ).orNull();
+                            if ( region == null )
+                            {
+                                throw new CommandException(
+                                        Texts.builder( "You are not in some region." ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            } else
+                            {
+                                ActionResponse response = region.getProtectionStaff().kick(
+                                        src, args.< Player >getOne( "player" ).get().getUniqueId()
+                                );
+                                if ( response.equals( ActionResponse.Successful ) )
+                                {
+                                    player.sendMessage(
+                                            Texts.builder( "You have kick the player '" ).append(
+                                                    args.< Player >getOne(
+                                                            "player"
+                                                    ).get().getDisplayNameData().getDisplayName()
+                                            ).append(
+                                                    Texts.builder( "' from this region." ).color(
+                                                            TextColors.GRAY
+                                                    ).build()
+                                            ).color(
+                                                    TextColors.GRAY
+                                            ).build()
+                                    );
+                                } else
+                                {
+                                    switch ( response.getMessage() )
+                                    {
+                                        case "access":
+                                            throw new CommandException(
+                                                    Texts.builder( "You don't have access to this region." ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                            //TODO: make the promote kick in ProtectionStaff.
+                                    }
+                                }
+                            }
+                        } else
+                        {
+                            throw new CommandException( Texts.builder( "I don't know who are you!" ).color( TextColors.RED ).build() );
+                        }
+                        return CommandResult.success();
                     }
                 }
         ).build();
@@ -234,13 +290,61 @@ public class OglofusSponge implements ProtectionPlugin
                     @Override
                     public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
                     {
-                        //TODO
-                        return null;
+                        if ( src instanceof Player )
+                        {
+                            Player player = ( Player ) src;
+                            ProtectionRegion region = OglofusSponge.this.regionManager.getRegion(
+                                    new OglofusProtectionLocation(
+                                            OglofusSponge.this, player.getLocation()
+                                    )
+                            ).orNull();
+                            if ( region == null )
+                            {
+                                throw new CommandException(
+                                        Texts.builder( "You are not in some region." ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            } else
+                            {
+                                ActionResponse response = region.getProtectionStaff().promote(
+                                        src, args.< Player >getOne( "player" ).get().getUniqueId()
+                                );
+                                if ( response.equals( ActionResponse.Successful ) )
+                                {
+                                    player.sendMessage(
+                                            Texts.builder( "You have promote the player '" ).append(
+                                                    args.< Player >getOne(
+                                                            "player"
+                                                    ).get().getDisplayNameData().getDisplayName()
+                                            ).append( Texts.builder( "' to officer." ).color( TextColors.GRAY ).build() ).color(
+                                                    TextColors.GRAY
+                                            ).build()
+                                    );
+                                } else
+                                {
+                                    switch ( response.getMessage() )
+                                    {
+                                        case "access":
+                                            throw new CommandException(
+                                                    Texts.builder( "You don't have access to this region." ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                            //TODO: make the promote method in ProtectionStaff.
+                                    }
+                                }
+                            }
+                        } else
+                        {
+                            throw new CommandException( Texts.builder( "I don't know who are you!" ).color( TextColors.RED ).build() );
+                        }
+                        return CommandResult.success();
                     }
                 }
         ).build();
 
-        CommandSpec demote = CommandSpec.builder().permission( "oglofus.protection.command.demote" ).description(
+        final CommandSpec demote = CommandSpec.builder().permission( "oglofus.protection.command.demote" ).description(
                 Texts.of( "Demote a player from officer to member in your region." )
         ).arguments(
                 GenericArguments.onlyOne( GenericArguments.player( Texts.of( "player" ), this.game ) )
@@ -250,8 +354,56 @@ public class OglofusSponge implements ProtectionPlugin
                     @Override
                     public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
                     {
-                        //TODO
-                        return null;
+                        if ( src instanceof Player )
+                        {
+                            Player player = ( Player ) src;
+                            ProtectionRegion region = OglofusSponge.this.regionManager.getRegion(
+                                    new OglofusProtectionLocation(
+                                            OglofusSponge.this, player.getLocation()
+                                    )
+                            ).orNull();
+                            if ( region == null )
+                            {
+                                throw new CommandException(
+                                        Texts.builder( "You are not in some region." ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            } else
+                            {
+                                ActionResponse response = region.getProtectionStaff().demote(
+                                        src, args.< Player >getOne( "player" ).get().getUniqueId()
+                                );
+                                if ( response.equals( ActionResponse.Successful ) )
+                                {
+                                    player.sendMessage(
+                                            Texts.builder( "You have demote the player '" ).append(
+                                                    args.< Player >getOne(
+                                                            "player"
+                                                    ).get().getDisplayNameData().getDisplayName()
+                                            ).append( Texts.builder( "' to member." ).color( TextColors.GRAY ).build() ).color(
+                                                    TextColors.GRAY
+                                            ).build()
+                                    );
+                                } else
+                                {
+                                    switch ( response.getMessage() )
+                                    {
+                                        case "access":
+                                            throw new CommandException(
+                                                    Texts.builder( "You don't have access to this region." ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                            //TODO: make the demote method in ProtectionStaff.
+                                    }
+                                }
+                            }
+                        } else
+                        {
+                            throw new CommandException( Texts.builder( "I don't know who are you!" ).color( TextColors.RED ).build() );
+                        }
+                        return CommandResult.success();
                     }
                 }
         ).build();
@@ -267,8 +419,111 @@ public class OglofusSponge implements ProtectionPlugin
                     @Override
                     public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
                     {
-                        //TODO
-                        return null;
+                        Player player;
+                        if ( args.hasAny( "player" ) )
+                        {
+                            if ( src instanceof Player )
+                            {
+                                player = ( Player ) src;
+                            } else
+                            {
+                                throw new CommandException(
+                                        Texts.builder( "I don't know who are you!" ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            }
+                        } else
+                        {
+                            if ( !src.hasPermission( "oglofus.sponge.gamemode.others" ) )
+                            {
+                                throw new CommandPermissionException(
+                                        Texts.builder( "You do not have permission to use this command!" ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            }
+                            player = args.< Player >getOne( "player" ).get();
+                        }
+                        //TODO: waiting for getType method in ItemTypes.
+                        return CommandResult.success();
+                    }
+                }
+        ).build();
+
+        CommandSpec rename = CommandSpec.builder().permission( "oglofus.protection.command.rename" ).description(
+                Texts.of( "Rename your region." )
+        ).arguments(
+                GenericArguments.onlyOne( GenericArguments.string( Texts.of( "name" ) ) )
+        ).executor(
+                new CommandExecutor()
+                {
+                    @Override
+                    public CommandResult execute( CommandSource src, CommandContext args ) throws CommandException
+                    {
+                        if ( src instanceof Player )
+                        {
+                            Player player = ( Player ) src;
+                            ProtectionRegion region = OglofusSponge.this.regionManager.getRegion(
+                                    new OglofusProtectionLocation(
+                                            OglofusSponge.this, player.getLocation()
+                                    )
+                            ).orNull();
+                            if ( region == null )
+                            {
+                                throw new CommandException(
+                                        Texts.builder( "You are not in some region." ).color(
+                                                TextColors.RED
+                                        ).build()
+                                );
+                            } else
+                            {
+                                ActionResponse response = region.changeName(
+                                        src, args.< String >getOne( "name" ).get()
+                                );
+                                if ( response.equals( ActionResponse.Successful ) )
+                                {
+                                    player.sendMessage(
+                                            Texts.builder( "You have change the region's name to '" ).append(
+                                                    Texts.builder(
+                                                            region.getName()
+                                                    ).color( TextColors.RED ).build()
+                                            ).append( Texts.builder( "'." ).color( TextColors.GRAY ).build() ).color(
+                                                    TextColors.GRAY
+                                            ).build()
+                                    );
+                                } else
+                                {
+                                    switch ( response.getMessage() )
+                                    {
+                                        case "access":
+                                            throw new CommandException(
+                                                    Texts.builder( "You don't have access to this region." ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                        case "length":
+                                            throw new CommandException(
+                                                    Texts.builder(
+                                                            "The name is too big. Please type a name smaller from 36 chars."
+                                                    ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                        case "exists":
+                                            throw new CommandException(
+                                                    Texts.builder( "Some other region has this name." ).color(
+                                                            TextColors.RED
+                                                    ).build()
+                                            );
+                                    }
+                                }
+                            }
+                        } else
+                        {
+                            throw new CommandException( Texts.builder( "I don't know who are you!" ).color( TextColors.RED ).build() );
+                        }
+                        return CommandResult.success();
                     }
                 }
         ).build();
@@ -279,7 +534,7 @@ public class OglofusSponge implements ProtectionPlugin
                 accept, "accept", "acc"
         ).child( kick, "kick" ).child( promote, "promote", "pro" ).child(
                 demote, "demote", "dem"
-        ).child( give, "give" ).build();
+        ).child( give, "give" ).child( rename, "rename", "changename", "setname" ).build();
 
         this.game.getCommandDispatcher().register( this, protection, "protection", "protector", "protect", "p" );
     }
