@@ -1,5 +1,7 @@
 # OglofusProtection [![Build Status](https://api.travis-ci.org/nikosgram13/OglofusProtection.svg?branch=master)](https://travis-ci.org/nikosgram13/OglofusProtection)
 
+#### This project moved to https://github.com/Oglofus/OglofusProtection
+
 OglofusProtection allows a player to place a special block, and this protects their area from griefing! (Spigot & Sponge API)
 
 ## Prerequisites
